@@ -42,7 +42,10 @@ Atendendo às ressalvas e exigências de implementação customizada:
 │   ├── tf_idf.py              # Cálculo de TF-IDF manual
 │   ├── pmi.py                 # Cálculo de PMI manual
 │   ├── label_propagation.py   # Algoritmo de Label Propagation
-│   └── main.py                # Ponto de entrada
+│   ├── main.py                # Ponto de entrada
+│   └── tests/                 # Testes unitários (pytest)
+│       ├── __init__.py
+│       └── test_graph.py      # Testes da estrutura de listas
 ├── frontend/                  # Aplicação Web (Next.js/React)
 │   ├── src/
 │   ├── package.json
