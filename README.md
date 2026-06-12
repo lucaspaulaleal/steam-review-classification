@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Classificação de Reviews da Steam por Aspecto Técnico via Grafo Tripartido
 
-## Getting Started
+## Visão Geral do Projeto
+Este projeto tem como objetivo classificar automaticamente reviews de jogos da plataforma Steam, identificando qual aspecto técnico cada review discute: **Performance**, **Gráficos**, **Gameplay** ou **Narrativa**. Como as reviews na Steam possuem apenas um rótulo binário (positivo/negativo), este trabalho utiliza um **grafo tripartido** e o algoritmo de **Label Propagation** para inferir a categoria de cada review sem a necessidade de anotação manual em massa.
 
-First, run the development server:
+## Modelagem do Grafo Tripartido
+O corpus de texto é representado como um grafo contendo três camadas distintas de nós:
+1. **Review (R)**: Textos dos usuários.
+2. **Palavra (P)**: Tokens extraídos após o pré-processamento.
+3. **Categoria (C)**: Aspectos técnicos (Performance, Gráficos, Gameplay, Narrativa) definidos por palavras-semente (seeds).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Arestas
+- **R → P**: Peso baseado em **TF-IDF**, indicando a importância da palavra na review.
+- **P ↔ P**: Peso baseado em **PMI** (Pointwise Mutual Information), indicando a coocorrência estatística entre palavras.
+- **P → C**: Arestas fixas ligando as palavras-semente às suas respectivas categorias.
+
+## Restrições e Estruturas de Dados
+Atendendo às ressalvas e exigências de implementação customizada:
+- **SEM BIBLIOTECAS PRONTAS**: O grafo e as estruturas de dados não utilizarão bibliotecas como `networkx`. Tudo será implementado nativamente do zero.
+- **SEM TABELAS HASH**: Não utilizaremos dicionários em Python (`dict`), `set`, ou outras formas de tabelas hash.
+- **PREFERÊNCIA POR LISTAS**: A estrutura principal do grafo será implementada utilizando **listas de adjacência** puramente baseadas em arrays (listas no Python).
+  - Para evitar matrizes de adjacência (que ficariam muito esparsas e ocupariam memória excessiva), representaremos o grafo como uma lista de listas: `adj = [ [(vizinho1_idx, peso), ...], ... ]`.
+  - Como não podemos usar dicionários para mapear strings (nomes de palavras/reviews) para índices, utilizaremos **listas ordenadas e busca binária** $O(\log N)$ para garantir uma performance aceitável nas buscas.
+
+## Algoritmos Implementados Manualmente
+1. **Grafo por Listas de Adjacência**: Estrutura eficiente em memória utilizando apenas arrays.
+2. **TF-IDF**: Cálculo da frequência de termos e inverso da frequência nos documentos iterando sobre listas.
+3. **PMI**: Cálculo das coocorrências utilizando matrizes esparsas via listas de listas.
+4. **Label Propagation**: Propagação iterativa dos scores das categorias para o restante do grafo, convergindo até um limiar definido.
+
+## Stack Tecnológica Inicial
+- **Backend**: Python (sem uso de libs estruturais prontas para os grafos/dicionários).
+- **Frontend**: Next.js (já inicializado na pasta `/src`).
+
+## Estrutura de Diretórios
+
+```text
+/
+├── backend/
+│   ├── graph.py               # Estrutura do Grafo customizada usando listas (sem dicionários)
+│   ├── utils.py               # Funções auxiliares (como busca binária em listas)
+│   ├── tf_idf.py              # Cálculo de TF-IDF manual
+│   ├── pmi.py                 # Cálculo de PMI manual
+│   ├── label_propagation.py   # Algoritmo de Label Propagation
+│   └── main.py                # Ponto de entrada
+├── src/                       # Frontend Next.js
+└── README.md                  # Este arquivo
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
