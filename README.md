@@ -42,15 +42,16 @@ Atendendo às ressalvas e exigências de implementação customizada:
 │   ├── tf_idf.py              # Cálculo de TF-IDF manual
 │   ├── pmi.py                 # Cálculo de PMI manual
 │   ├── label_propagation.py   # Algoritmo de Label Propagation
-│   ├── main.py                # Ponto de entrada
-│   └── requirements.txt       # Dependências do backend
+│   └── main.py                # Ponto de entrada
 ├── frontend/                  # Aplicação Web (Next.js/React)
 │   ├── src/
 │   ├── package.json
 │   └── ...
+├── infra/                     # Infraestrutura e Setup
+│   ├── requirements.txt       # Dependências do backend
+│   └── Makefile               # Scripts para setup, instalação e execução
 ├── .github/
 │   └── workflows/
 │       └── ci.yml             # Pipeline de Integração Contínua (GitHub Actions)
-├── Makefile                   # Scripts para setup, instalação e execução
 └── README.md                  # Este arquivo
 ```
