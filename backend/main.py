@@ -1,23 +1,31 @@
-# backend/main.py
-from graph import Graph
+#backend/main.py
+
+try:
+    from .graph_builder import build_tripartite_graph, mock_documents, mock_seed_groups
+    from .label_propagation import classify_reviews, label_propagation
+except ImportError:
+    from graph_builder import build_tripartite_graph, mock_documents, mock_seed_groups
+    from label_propagation import classify_reviews, label_propagation
+
 
 def main():
     print("Inicializando o Grafo Tripartido de Reviews...")
-    g = Graph()
-    
-    # Exemplo de inserção de nós e arestas (Review -> Palavra)
-    g.add_edge("r1_review_texto", "fps", 0.82)
-    g.add_edge("r1_review_texto", "textura", 0.61)
-    
-    # Exemplo de inserção de arestas (Palavra -> Palavra)
-    g.add_edge("fps", "lag", 0.74)
-    g.add_edge("fps", "crash", 0.63)
-    
-    # Exemplo de inserção de arestas (Palavra -> Categoria)
-    g.add_edge("fps", "Performance", 1.0)
-    
-    print("Vizinhos de 'fps':")
-    print(g.get_neighbors("fps"))
+
+    #Pipeline completa usando dados mockados.
+    graph = build_tripartite_graph(mock_documents(), mock_seed_groups())
+    scores = label_propagation(graph, iterations=30, threshold=0.0001)
+    classifications = classify_reviews(graph, scores)
+
+    print("\nNos:", graph.size())
+    print("\nClassificacoes mockadas:")
+    for review_label, category, score, all_scores in classifications:
+        #Mostra a melhor categoria e tambem o vetor completo de scores.
+        print(f"- {review_label}: {category} ({score:.3f})")
+        print(f"  scores: {all_scores}")
+
+    print("\nVizinhos de word:fps:")
+    print(graph.get_neighbors("word:fps"))
+
 
 if __name__ == "__main__":
     main()
