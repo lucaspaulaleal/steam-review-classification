@@ -30,7 +30,7 @@ Atendendo às ressalvas e exigências de implementação customizada:
 
 ## Stack Tecnológica Inicial
 - **Backend**: Python (sem uso de libs estruturais prontas para os grafos/dicionários).
-- **Frontend**: Next.js (já inicializado na pasta `/src`).
+- **Frontend**: React + Next.js + Tailwind (já inicializado na pasta `/frontend`).
 
 ## Estrutura de Diretórios
 
