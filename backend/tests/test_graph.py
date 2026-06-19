@@ -1,5 +1,5 @@
 import pytest
-from backend.graph import Graph
+from backend.graph.graph import Graph
 
 
 def test_graph_add_node():
