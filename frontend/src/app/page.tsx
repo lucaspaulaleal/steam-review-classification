@@ -1,66 +1,107 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import { Black_And_White_Picture } from "next/font/google";
 
 export default function Home() {
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+        {/* Header */}
+        <div className={styles.header}>
+            <img src="/logo.svg" alt="imagem" />
+            <p>Steam Review Classification</p>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+
+        {/* Body*/}
+        <main className={styles.main}>
+            {/* Título */}
+            <div className={styles.TituloJogo}>
+                <p>Análise de usuários para </p>
+                <h1 className={styles.NomeJogo}>NOME DO JOGO</h1>
+            </div>
+            
+            {/* Análise Geral */}
+            <div className={styles.analiseGeral}>
+                {/* Blocos de resumo */}
+                <div className={styles.containerGeral}>
+                    {/* Resumo Pt-br */}
+                    <p>ANÁLISES EM PT-BR</p>
+                    <h2 className={styles.positiveAnalises}>Muito positivas</h2>
+                    <p>2.000 análises</p>
+                </div>
+                <div className={styles.containerGeralMenor}>
+                    {/* Análises todos os idiomas */}
+                    <div className={styles.containerGeral}>
+                        <p>Análise em todos os idiomas: <span>124.874</span></p>
+                        <p className={styles.positiveAnalises}>Muito positivas</p>
+                    </div>
+                    <div className={styles.containerGeral}>
+                        <p>Análise em todos os idiomas: <span>124.874</span></p>
+                        <p className={styles.positiveAnalises}>Muito positivas</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Filtro de Análise */}
+            <div className={styles.ContainerFiltro}>
+                <p>FILTROS DE ANÁLISE</p>
+                <div className={styles.buttonSection}>
+                    <button className={styles.button}>Idiomas</button>
+                    <button className={styles.button}>Ordenar por: Data de publicação</button>
+                    <button className={styles.button}>Recomendação: ambas</button>
+                </div>
+                <hr />
+                <div className={styles.containerCategorias}>
+                    <p>Categorias</p>
+                    <button>Todas</button>
+                    <button>Narrativa</button>
+                    <button>Performance</button>
+                    <button>Gráfico</button>
+                    <button>Gameplay</button>
+                </div>
+            </div>
+            {/* Reviews */}
+            <div className={styles.ContainerReviews}>
+                <h2>Análises mais úteis</h2>
+
+                {/* Reviews */}
+                <div>
+                    {/* Reviews individuais */}
+                    <div className={styles.ReviewCard}>
+                        {/* cabeçalho reviews */}
+                        <div className={styles.ReviewCardHeader}>
+                            {/* imagem like ou dislike */}
+
+                            <img src="/like.svg" alt="" />       
+                            <div>
+                                <p className={styles.ReviewRecomendation}>Não recomenda</p>
+                                <p className={styles.ReviewId}>Review #0123</p>
+                                {/* Categorias da review */}
+                                <div className={styles.ReviewMarcadores}>
+                                    <div className={styles.ReviewMarcador}>Categoria 1</div>
+                                    <div className={styles.ReviewMarcador}>Categoria 2</div>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+
+                        {/* Conteúdo review*/}
+                        <div className={styles.ReviewContent}>
+                            <p>Estou deixando esta análise negativa porque o jogo tem uma base cooperativa brilhante, mas falta variedade. Depois de algumas runs, a sensação é de que a campanha repete os mesmos encontros e não entrega conteúdo suficiente para manter o grupo voltando.
+
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Reviews individuais */}
+
+                </div>
+            </div>
+
+
+
+
+        </main>
+      </div>
   );
 }
