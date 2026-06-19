@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# datasets (arquivos CSV pesados baixados via script)
+datasets/*.csv
+datasets/*.txt
+!datasets/.gitkeep
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
