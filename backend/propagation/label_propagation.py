@@ -1,4 +1,4 @@
-#backend/label_propagation.py
+#backend/propagation/label_propagation.py
 
 
 def _find_index(items, target):

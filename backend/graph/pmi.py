@@ -1,4 +1,4 @@
-#backend/pmi.py
+#backend/graph/pmi.py
 
 from math import log
 

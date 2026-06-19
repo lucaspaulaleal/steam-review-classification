@@ -20,5 +20,5 @@ run-frontend:
 	cd frontend && npm run dev
 
 run-backend:
-	@echo "Starting Python backend..."
-	uv run python backend/main.py
+	@echo "Starting FastAPI backend server..."
+	uv run uvicorn backend.api.main:app --reload

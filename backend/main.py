@@ -1,11 +1,15 @@
 #backend/main.py
 
-try:
-    from .graph_builder import build_tripartite_graph, mock_documents, mock_seed_groups
-    from .label_propagation import classify_reviews, label_propagation
-except ImportError:
-    from graph_builder import build_tripartite_graph, mock_documents, mock_seed_groups
-    from label_propagation import classify_reviews, label_propagation
+import sys
+from pathlib import Path
+
+
+if __package__ is None or __package__ == "":
+    #Permite rodar com: uv run python backend/main.py
+    sys.path.append(str(Path(__file__).resolve().parents[1]))
+
+from backend.graph.builder import build_tripartite_graph, mock_documents, mock_seed_groups
+from backend.propagation.label_propagation import classify_reviews, label_propagation
 
 
 def main():

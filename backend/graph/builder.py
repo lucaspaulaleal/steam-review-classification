@@ -1,13 +1,8 @@
-#backend/graph_builder.py
+#backend/graph/builder.py
 
-try:
-    from .graph import Graph
-    from .pmi import calculate_pmi
-    from .tf_idf import calculate_tf_idf
-except ImportError:
-    from graph import Graph
-    from pmi import calculate_pmi
-    from tf_idf import calculate_tf_idf
+from backend.graph.graph import Graph
+from backend.graph.pmi import calculate_pmi
+from backend.preprocessing.tf_idf import calculate_tf_idf
 
 
 def _find_index(items, target):

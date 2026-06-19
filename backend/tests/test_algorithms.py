@@ -1,7 +1,7 @@
-from backend.graph_builder import build_tripartite_graph, mock_documents, mock_seed_groups
-from backend.label_propagation import classify_reviews, label_propagation
-from backend.pmi import calculate_pmi
-from backend.tf_idf import calculate_tf_idf
+from backend.graph.builder import build_tripartite_graph, mock_documents, mock_seed_groups
+from backend.graph.pmi import calculate_pmi
+from backend.preprocessing.tf_idf import calculate_tf_idf
+from backend.propagation.label_propagation import classify_reviews, label_propagation
 
 
 def _find_tuple_by_first(items, target):
