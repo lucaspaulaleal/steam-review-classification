@@ -121,8 +121,8 @@ def generate_report(total_rows, total_ptbr, top_game, top_count, top_10, df_top)
         f"  Reviews do jogo:           {top_count:>12,}",
         "",
         "  Distribuição recomendação:",
-        f"    Positivas (voted_up=True):  {df_top['voted_up'].sum() if 'voted_up' in df_top.columns else 'N/A'}",
-        f"    Negativas (voted_up=False): {(~df_top['voted_up']).sum() if 'voted_up' in df_top.columns else 'N/A'}",
+        f"    Positivas (recommended=True):  {df_top['recommended'].sum() if 'recommended' in df_top.columns else 'N/A'}",
+        f"    Negativas (recommended=False): {(~df_top['recommended']).sum() if 'recommended' in df_top.columns else 'N/A'}",
         "",
         "  Tamanho médio das reviews:  "
         f"{df_top['review'].fillna('').str.len().mean():.0f} caracteres",

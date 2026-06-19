@@ -40,8 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# datasets (arquivos CSV pesados baixados via script)
+# datasets (arquivos pesados baixados via script)
 datasets/*.csv
+datasets/*.csv.zip
+datasets/*.zip
 datasets/*.txt
 !datasets/.gitkeep
 
