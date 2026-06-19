@@ -1,6 +1,4 @@
-import Image from "next/image";
 import styles from "./page.module.css";
-import { Black_And_White_Picture } from "next/font/google";
 
 export default function Home() {
   return (
