@@ -1,0 +1,2 @@
+# Esse arquivo existe apenas para que o Git rastreie a pasta datasets/ mesmo vazia.
+# Os arquivos CSV reais são baixados via script e não devem ser commitados.
