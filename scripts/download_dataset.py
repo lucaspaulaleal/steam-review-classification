@@ -82,7 +82,8 @@ def select_top_game(df_ptbr):
     Identifica o jogo com mais reviews em PT-BR,
     mostra um ranking top 10 e retorna o DataFrame filtrado.
     """
-    print("[4/5] Identificando o jogo mais avaliado em Português...")
+    TARGET_GAME = "Grand Theft Auto V"
+    print(f"\n[4/5] Selecionando as reviews do jogo: '{TARGET_GAME}'...")
 
     # Calcula o ranking uma única vez
     ranking = df_ptbr['app_name'].value_counts()
@@ -92,12 +93,12 @@ def select_top_game(df_ptbr):
     print("  TOP 10 JOGOS MAIS AVALIADOS EM PORTUGUÊS")
     print("=" * 60)
     for i, (game, count) in enumerate(top_10.items(), 1):
-        marker = " <<<" if i == 1 else ""
+        marker = " <<<" if game == TARGET_GAME else ""
         print(f"  {i:2d}. {game:<35s} {count:>7,} reviews{marker}")
     print("=" * 60 + "\n")
 
-    top_game = ranking.idxmax()
-    top_count = ranking.max()
+    top_game = TARGET_GAME
+    top_count = ranking.get(TARGET_GAME, 0)
 
     print(f"[4/5] Selecionado: '{top_game}' com {top_count:,} reviews.")
 
