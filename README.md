@@ -101,7 +101,13 @@ docker exec -it steam_reviews_backend python scripts/download_dataset.py
 
 ## 👥 Equipe do Projeto
 
-Desenvolvido por estudantes do curso de Engenharia de Software para a disciplina de **Estruturas de Dados e Algoritmos**.
+Desenvolvido por estudantes de Engenharia de Software para a disciplina de **Estruturas de Dados 2**.
+
+- **João Marcelo Guimarães Costa Naves** ([@JoaoMarceloGCN](https://github.com/JoaoMarceloGCN))
+- **Lucas de Paula Leal** ([@lucaspaulaleal](https://github.com/lucaspaulaleal))
+- **Pedro Henrique Pereira Santos** ([@pedrohpsantos](https://github.com/pedrohpsantos))
+- **Raissa Silva de Oliveira** ([@daisha19](https://github.com/daisha19))
+- **Yasmin Dayrell Albuquerque** ([@YasminDayrell](https://github.com/YasminDayrell))
 
 ---
 *Universidade de Brasília (UnB)*
