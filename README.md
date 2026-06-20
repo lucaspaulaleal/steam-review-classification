@@ -78,24 +78,55 @@ A aplicação é dividida em três frentes e totalmente conteinerizada para gara
 ## 🚀 Como Executar Localmente
 
 ### Pré-requisitos
-* Docker e Docker Compose instalados na máquina.
-* Arquivo `kaggle.json` posicionado na sua pasta *home* (`~/.kaggle/`) para autenticar o download da base.
+* Git instalado.
+* Docker instalado e em execução.
+* Docker Compose disponível pelo comando `docker compose`.
+* Node.js instalado para executar o frontend localmente.
+* Opcionalmente, arquivo `kaggle.json` posicionado na sua pasta *home* (`~/.kaggle/`) ou variáveis `KAGGLE_USERNAME` e `KAGGLE_KEY` para autenticar o download da base.
 
-### Passo 1: Construir e Inicializar os Serviços
-Suba o ambiente utilizando o Docker Compose na raiz do projeto:
+### Passo 1: Clonar o repositório
 ```bash
-docker-compose up --build
+git clone https://github.com/lucaspaulaleal/steam-review-classification.git
+cd steam-review-classification
 ```
 
-### Passo 2: Extrair a Base de Dados
-Em outro terminal (ou pelo container do Backend), execute a pipeline de extração para o jogo "Grand Theft Auto V":
+### Passo 2: Construir e inicializar o backend
+Suba o ambiente utilizando o Docker Compose na raiz do projeto:
+```bash
+docker compose up --build
+```
+
+Esse comando constrói a imagem do backend, instala as dependências Python e inicia a API FastAPI em `http://localhost:8000`.
+
+### Passo 3: Validar a API
+Com o container em execução, acesse:
+
+* **Health check:** `http://localhost:8000/health`
+* **Swagger Docs:** `http://localhost:8000/docs`
+* **Classificações mockadas:** `http://localhost:8000/reviews/mock-classifications`
+
+### Passo 4: Extrair a base de dados
+Em outro terminal, execute a pipeline de extração para o jogo "Grand Theft Auto V":
 ```bash
 docker exec -it steam_reviews_backend python scripts/download_dataset.py
 ```
 
-### Passo 3: Acessar a Aplicação
-* **Backend API (Swagger Docs):** `http://localhost:8000/docs`
+Caso prefira usar variáveis de ambiente para o Kaggle, crie um arquivo `.env` na raiz do projeto ou exporte `KAGGLE_USERNAME` e `KAGGLE_KEY` antes de subir o Docker Compose.
+
+### Passo 5: Executar o frontend
+O `docker-compose.yml` atual sobe apenas o backend. Para iniciar o frontend localmente, use outro terminal:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Depois acesse:
+
 * **Frontend Visualizador:** `http://localhost:3000`
+
+### Documentação de reprodutibilidade
+As instruções detalhadas para avaliação do projeto do zero estão em [`docs/reprodutibilidade.md`](docs/reprodutibilidade.md).
 
 ---
 
