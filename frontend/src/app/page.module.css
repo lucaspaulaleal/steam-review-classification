@@ -359,6 +359,11 @@ cinza escuro fundo
     background-color: var(--primary);
 }
 
+.button:hover {
+    background-color: var(--primary);
+
+}
+
 
 .containerCategorias {
     margin-top: 1rem;
