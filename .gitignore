@@ -13,6 +13,14 @@
 # testing
 /coverage
 
+# python
+__pycache__/
+*.py[cod]
+.venv/
+
+# notebooks
+.ipynb_checkpoints/
+
 # next.js
 /.next/
 /out/

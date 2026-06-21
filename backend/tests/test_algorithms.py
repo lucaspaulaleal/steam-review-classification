@@ -5,7 +5,11 @@ import pytest
 from backend.graph.builder import build_tripartite_graph, mock_documents, mock_seed_groups
 from backend.graph.pmi import calculate_pmi
 from backend.preprocessing.tf_idf import calculate_tf_idf
-from backend.propagation.label_propagation import classify_reviews, label_propagation
+from backend.propagation.label_propagation import (
+    classify_reviews,
+    label_propagation,
+    label_propagation_with_history,
+)
 
 
 def _find_tuple_by_first(items, target):
@@ -135,3 +139,12 @@ def test_label_propagation_classifies_mock_reviews():
     assert r2[1] == "Graficos"
     assert r3[1] == "Gameplay"
     assert r4[1] == "Narrativa"
+
+
+def test_label_propagation_with_history_tracks_convergence():
+    graph = build_tripartite_graph(mock_documents(), mock_seed_groups())
+    scores, history = label_propagation_with_history(graph, iterations=30, threshold=0.0001)
+
+    assert len(scores) == graph.size()
+    assert len(history) > 0
+    assert history[-1][1] < history[0][1]
