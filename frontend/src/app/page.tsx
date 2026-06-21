@@ -86,7 +86,7 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.TituloJogo}>
           <p>Análise de usuários para</p>
-          <h1 className={styles.NomeJogo}>NOME DO JOGO</h1>
+          <h1 className={styles.NomeJogo}>Grand Theft Auto V</h1>
         </div>
 
         <div className={styles.analiseGeral}>

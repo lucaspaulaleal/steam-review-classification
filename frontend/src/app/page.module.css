@@ -90,7 +90,8 @@ cinza escuro fundo
     padding-top: 1rem;
     padding-bottom: 1rem;
     color: var(--gray);
-
+    justify-content: center;
+    width: 100%;
 }
 
 .containerGeral {
