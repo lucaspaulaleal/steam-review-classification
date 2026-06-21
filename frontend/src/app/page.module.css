@@ -1,10 +1,28 @@
 .page {
-  --background: #fafafa;
-  --foreground: #fff;
+  --background: #1b2838;
+  --foreground: #1b2838;
 
   --text-primary: #000;
-  --text-secondary: #666;
+  --text-secondary: #c7d5e0;
+    --white: #ffffff;
+    --primary: #66c0f4;
+    --gray: #8F98A0;
+    --light-gray: #C7D5E0;
+    --dark-blue-2: #3B4B59;
+    --background-blue: #102033;
+    --dark-blue: #132943;
 
+/* branco #ffffff
+azul escuro header e fundo #1b2838 
+azul escuro body, 
+cinza
+azul claro primário #66c0f4
+azul cinza botão #364657
+cinza escuro fundo
+ */
+
+
+    
   --button-primary-hover: #383838;
   --button-secondary-hover: #f2f2f2;
   --button-secondary-border: #ebebeb;
@@ -25,64 +43,207 @@
   max-width: 800px;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: space-between;
-  background-color: var(--foreground);
-  padding: 120px 60px;
+  /* justify-content: space-between; */
+  background-color: var(--background);
+  padding: 2rem ;
 }
 
-.intro {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  gap: 24px;
+/* Header */
+.header {
+    display: flex;
+    flex-direction: row;
+    background-color: var(--background-blue);
+    width: 100%;
+    padding: 1rem;
+    gap: 2rem;
+    align-items: center;
+    font-weight: bold;
 }
 
-.intro h1 {
-  max-width: 320px;
-  font-size: 40px;
-  font-weight: 600;
-  line-height: 48px;
-  letter-spacing: -2.4px;
-  text-wrap: balance;
-  color: var(--text-primary);
+/* Seção de título de Jogo */
+
+
+.TituloJogo p {
+    color: var(--gray);
+    font-size: 1rem;
 }
 
-.intro p {
-  max-width: 440px;
-  font-size: 18px;
-  line-height: 32px;
-  text-wrap: balance;
-  color: var(--text-secondary);
+
+/* Análise Geral */
+.analiseGeral {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    color: var(--gray);
+
 }
 
-.intro a {
-  font-weight: 500;
-  color: var(--text-primary);
+.containerGeral {
+    background-color: var(--dark-blue-2);
+    padding: 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
 }
 
-.ctas {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  max-width: 440px;
-  gap: 16px;
-  font-size: 14px;
+.containerGeral p {
+    font-size: .8rem;
 }
 
-.ctas a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 128px;
-  border: 1px solid transparent;
-  transition: 0.2s;
-  cursor: pointer;
-  width: fit-content;
-  font-weight: 500;
+.containerGeral span {
+    font-weight: bold;
+    color: var(--light-gray);
 }
+
+.containerGeralMenor {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    font-size: .8rem;
+}
+
+.positiveAnalises {
+    color: var(--primary);
+    font-weight: bold;
+}
+
+
+
+/* Filtro */
+.ContainerFiltro {
+    background-color: var(--background-blue);
+    padding: 1rem;
+    width: 100%;
+}
+
+.ContainerFiltro p {
+    color: var(--gray);
+    font-size: .8rem;
+    font-weight: bold;
+}
+
+.buttonSection {
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+    display: flex;
+    gap: 1rem;
+
+}
+
+.button {
+    padding: 1rem;
+    border-radius: 0%;
+    border: none;
+    background-color: var(--dark-blue);
+    font-weight: bold;
+    font-size: .7rem;
+}
+
+
+.button:focus {
+    background-color: var(--primary);
+}
+
+
+.containerCategorias {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    align-items: center;
+}
+
+.containerCategorias button {
+    padding: 1rem;
+    background-color: var(--dark-blue-2);
+    border: none;
+    font-weight:600;
+    color: var(--light-gray);
+}
+
+.containerCategorias button:focus {
+    background-color: var(--primary);
+    color: var(--background-blue);
+}
+
+/* Reviews */
+
+.ContainerReviews {
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.ReviewCard {
+    background-color: #1c2f45;
+    width: 100%;
+    margin-bottom: 1rem;
+
+}
+
+.ReviewCardHeader {
+    background-color: var(--background-blue);
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    gap: 1rem;
+}
+
+
+
+.ReviewCardHeader img {
+    width: 3rem;
+    background-color: var(--primary);
+}
+
+.ReviewCardHeader div {
+    padding: .3rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.ReviewRecomendation {
+
+}
+
+.ReviewId {
+    color: var(--primary);
+    font-size: .7rem;
+    font-weight: bold;
+}
+
+.ReviewMarcadores{
+    display: flex;
+    flex-direction: row;
+    font-size: .8rem;
+    gap: .5rem;
+    color: var(--primary);
+}
+
+.ReviewMarcador{
+    background-color: var(--dark-blue);
+    padding: .3rem;
+}
+
+.ReviewContent {
+    color: rgb(171, 170, 170);
+    padding: 1rem;
+    font-size: .9rem;
+}
+
+
+
+
+/*  */
+
+
+/*  */
+
 
 a.primary {
   background: var(--text-primary);
@@ -128,15 +289,4 @@ a.secondary {
     filter: invert();
   }
 
-  .page {
-    --background: #000;
-    --foreground: #000;
-
-    --text-primary: #ededed;
-    --text-secondary: #999;
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-    --button-secondary-border: #1a1a1a;
-  }
 }
