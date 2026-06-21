@@ -89,3 +89,39 @@ class Graph:
 
     def size(self) -> int:
         return len(self.labels)
+
+    def export_d3_format(self):
+        """Exporta o grafo no formato de nodes e links para o D3.js."""
+        nodes = []
+        for i in range(len(self.labels)):
+            nodes.append({
+                "id": self.labels[i],
+                "label": self.labels[i],
+                "type": self.node_types[i]
+            })
+
+        links = []
+        for u_idx in range(len(self.adj)):
+            u_label = self.labels[u_idx]
+            for v_idx, weight in self.adj[u_idx]:
+                v_label = self.labels[v_idx]
+                
+                u_type = self.node_types[u_idx]
+                v_type = self.node_types[v_idx]
+                
+                edge_type = "unknown"
+                if u_type == "review" and v_type == "word":
+                    edge_type = "tfidf"
+                elif u_type == "word" and v_type == "word":
+                    edge_type = "pmi"
+                elif u_type == "word" and v_type == "category":
+                    edge_type = "seed"
+
+                links.append({
+                    "source": u_label,
+                    "target": v_label,
+                    "weight": weight,
+                    "type": edge_type
+                })
+
+        return {"nodes": nodes, "links": links}

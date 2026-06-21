@@ -70,3 +70,12 @@ def mock_classifications():
         "items": response,
         "count": len(response),
     }
+
+@app.get("/graph/mock-data")
+def graph_mock_data():
+    # Executa a pipeline mockada e devolve o grafo para o D3.js
+    graph = build_tripartite_graph(mock_documents(), mock_seed_groups())
+    
+    # Opcional: propagar labels para calcular score e talvez colorir nos (mas a issue pede as cores basicas)
+    # Por enquanto, basta retornar o grafo exportado
+    return graph.export_d3_format()
