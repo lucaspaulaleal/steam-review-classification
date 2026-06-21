@@ -1,7 +1,12 @@
 import os
 import glob
 import pandas as pd
+import sys
+from pathlib import Path
 
+# Add root project path to allow importing from backend
+sys.path.append(str(Path(__file__).resolve().parents[1]))
+from backend.preprocessing.nlp import clean_text_to_string
 DATASET_NAME = "najzeko/steam-reviews-2021"
 DESTINATION_FOLDER = "datasets"
 FINAL_FILE_NAME = "steam_reviews_ptbr_top_game.csv"
@@ -166,10 +171,14 @@ def main():
     # Passo 4: Seleciona o top game
     df_top, top_game, top_count, top_10 = select_top_game(df_ptbr)
 
-    # Passo 5: Salva e gera relatório
+    print("\n[5/6] Aplicando NLP (Limpeza e Lematização) nas reviews selecionadas...")
+    # Applica o processamento NLP para criar uma nova coluna
+    df_top['clean_tokens'] = df_top['review'].astype(str).apply(clean_text_to_string)
+
+    # Passo 6: Salva e gera relatório
     final_path = os.path.join(DESTINATION_FOLDER, FINAL_FILE_NAME)
     df_top.to_csv(final_path, index=False)
-    print(f"\n[5/5] Dataset final salvo em: {final_path}")
+    print(f"\n[6/6] Dataset final salvo em: {final_path}")
 
     generate_report(total_rows, len(df_ptbr), top_game, top_count, top_10, df_top)
 

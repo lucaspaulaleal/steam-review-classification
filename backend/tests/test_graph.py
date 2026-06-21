@@ -10,7 +10,7 @@ def test_graph_add_node():
     assert idx2 == 1
     assert g.labels == ["Review1", "fps"]
     assert len(g.adj) == 2
-    assert g.sorted_label_indices == [0, 1]
+    assert g.node_map == [("Review1", 0), ("fps", 1)]
 
 
 def test_graph_add_node_keeps_binary_search_index_sorted():
@@ -19,10 +19,10 @@ def test_graph_add_node_keeps_binary_search_index_sorted():
     idx_a = g.add_node("word:alpha")
     idx_m = g.add_node("word:middle")
 
-    assert [g.labels[idx] for idx in g.sorted_label_indices] == [
-        "word:alpha",
-        "word:middle",
-        "word:zeta",
+    assert g.node_map == [
+        ("word:alpha", idx_a),
+        ("word:middle", idx_m),
+        ("word:zeta", idx_z),
     ]
     assert g._find_node_idx("word:zeta") == idx_z
     assert g._find_node_idx("word:alpha") == idx_a

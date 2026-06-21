@@ -6,6 +6,11 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
+# Dependencia necessaria para o instalador do uv na imagem slim
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
 # Instala o gerenciador 'uv' sem depender do pip
 ADD https://astral.sh/uv/install.sh /uv-installer.sh
 RUN sh /uv-installer.sh && rm /uv-installer.sh
@@ -17,9 +22,6 @@ COPY infra/requirements.txt ./infra/requirements.txt
 # Instala as dependências usando o uv
 RUN uv pip install --system -r infra/requirements.txt
 
-# Instala fastapi e uvicorn explicitamente caso não estejam no requirements.txt
-RUN uv pip install --system fastapi uvicorn
-
 # Copia as pastas de backend e scripts
 COPY backend/ ./backend/
 COPY scripts/ ./scripts/
@@ -27,5 +29,5 @@ COPY scripts/ ./scripts/
 # Expõe a porta do FastAPI
 EXPOSE 8000
 
-# Executa o FastAPI
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Executa a API FastAPI
+CMD ["uvicorn", "backend.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
