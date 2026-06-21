@@ -32,7 +32,11 @@ export default function SteamGraph() {
     fetch("http://localhost:8000/graph/mock-data")
       .then(res => res.json())
       .then(data => {
-        setGraphData(data);
+        if (Array.isArray(data.nodes) && Array.isArray(data.links)) {
+          setGraphData(data);
+        } else {
+          setGraphData({ nodes: [], links: [] });
+        }
         setLoading(false);
       })
       .catch(err => {
@@ -49,8 +53,8 @@ export default function SteamGraph() {
     svg.selectAll("*").remove();
 
     const W = 820, H = 500;
-    const nodes = graphData.nodes.map(n => ({ ...n }));
-    const links = graphData.links.filter(l => filter[l.type]).map(l => ({ ...l }));
+    const nodes = (graphData.nodes || []).map(n => ({ ...n }));
+    const links = (graphData.links || []).filter(l => filter[l.type]).map(l => ({ ...l }));
 
     // Defs: arrow markers + glow filter
     const defs = svg.append("defs");
