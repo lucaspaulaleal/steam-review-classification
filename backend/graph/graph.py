@@ -12,6 +12,9 @@ class Graph:
         #Tipo do no usado pelo Label Propagation.
         self.node_types = []
 
+        #Indices dos nos ordenados por rotulo para permitir busca binaria.
+        self.sorted_label_indices = []
+
     def add_node(self, label: str, node_type: str = "unknown") -> int:
         """
         Adiciona um no ao grafo se ele ainda nao existir.
@@ -28,7 +31,9 @@ class Graph:
         self.labels.append(label)
         self.node_types.append(node_type)
         self.adj.append([])
-        return len(self.labels) - 1
+        new_idx = len(self.labels) - 1
+        self._insert_sorted_label_idx(new_idx)
+        return new_idx
 
     def add_edge(
         self,
@@ -63,11 +68,39 @@ class Graph:
         self.adj[u_idx].append((v_idx, weight))
 
     def _find_node_idx(self, label: str) -> int:
-        """Busca o indice do no pela string, sem tabela hash."""
-        for i in range(len(self.labels)):
-            if self.labels[i] == label:
-                return i
+        """Busca o indice do no por busca binaria, sem tabela hash."""
+        left = 0
+        right = len(self.sorted_label_indices) - 1
+
+        while left <= right:
+            middle = (left + right) // 2
+            node_idx = self.sorted_label_indices[middle]
+            current_label = self.labels[node_idx]
+
+            if current_label == label:
+                return node_idx
+            if current_label < label:
+                left = middle + 1
+            else:
+                right = middle - 1
+
         return -1
+
+    def _insert_sorted_label_idx(self, node_idx: int):
+        """Insere um indice mantendo a lista auxiliar ordenada por rotulo."""
+        label = self.labels[node_idx]
+        left = 0
+        right = len(self.sorted_label_indices)
+
+        while left < right:
+            middle = (left + right) // 2
+            current_idx = self.sorted_label_indices[middle]
+            if self.labels[current_idx] < label:
+                left = middle + 1
+            else:
+                right = middle
+
+        self.sorted_label_indices.insert(left, node_idx)
 
     def get_neighbors(self, label: str):
         idx = self._find_node_idx(label)
