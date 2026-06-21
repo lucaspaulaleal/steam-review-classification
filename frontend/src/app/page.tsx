@@ -1,3 +1,4 @@
+import SteamGraph from "../components/steam-graph";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -57,8 +58,14 @@ export default function Home() {
                     <button>Gameplay</button>
                 </div>
             </div>
+
+            {/* Visualização do Grafo */}
+            <div style={{ marginTop: "40px", border: "1px solid #1e293b", borderRadius: "8px", overflow: "hidden" }}>
+                <SteamGraph />
+            </div>
+
             {/* Reviews */}
-            <div className={styles.ContainerReviews}>
+            <div className={styles.ContainerReviews} style={{ marginTop: "40px" }}>
                 <h2>Análises mais úteis</h2>
 
                 {/* Reviews */}
@@ -95,10 +102,6 @@ export default function Home() {
 
                 </div>
             </div>
-
-
-
-
         </main>
       </div>
   );
