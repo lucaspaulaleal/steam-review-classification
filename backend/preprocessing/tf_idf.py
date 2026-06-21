@@ -1,22 +1,30 @@
-#backend/preprocessing/tf_idf.py
+# backend/preprocessing/tf_idf.py
+
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from math import log
-
-
-def _find_index(items, target):
-    for i in range(len(items)):
-        if items[i] == target:
-            return i
-    return -1
+from utils import binary_search_tuples, sorted_insert_tuple
 
 
 def _unique_tokens(tokens):
-    unique = []
+    """Retorna lista de tokens únicos sem usar set/dict."""
+    seen = []
     for token in tokens:
-        #Mantem uma palavra uma unica vez, sem usar set.
-        if _find_index(unique, token) == -1:
-            unique.append(token)
-    return unique
+        left, right, found = 0, len(seen) - 1, False
+        while left <= right:
+            mid = (left + right) // 2
+            if seen[mid] == token:
+                found = True
+                break
+            elif seen[mid] < token:
+                left = mid + 1
+            else:
+                right = mid - 1
+        if not found:
+            seen.insert(left, token)
+    return seen
 
 
 def _count_token(tokens, target):
@@ -27,9 +35,39 @@ def _count_token(tokens, target):
     return count
 
 
+def _build_df_table(documents):
+    """
+    Percorre todos os documentos UMA única vez e constrói uma tabela de
+    Document Frequency ordenada alfabeticamente por token.
+
+    Retorna:
+        df_table: lista de tuplas [(token, df_count), ...] ordenada por token.
+
+    Complexidade: O(D * T * log T) onde D = docs, T = tokens únicos por doc.
+    Lookup posterior: O(log V) via binary_search_tuples.
+    """
+    df_table = []
+
+    for _, tokens in documents:
+        unique = _unique_tokens(tokens)
+        for token in unique:
+            pos = binary_search_tuples(df_table, token)
+            if pos == -1:
+                # Token novo: insere ordenado
+                sorted_insert_tuple(df_table, (token, 1))
+            else:
+                # Token existente: incrementa
+                df_table[pos] = (token, df_table[pos][1] + 1)
+
+    return df_table
+
+
 def calculate_tf_idf(documents):
     """
     Calcula TF-IDF manualmente usando listas.
+
+    O Document Frequency é pré-computado em _build_df_table (uma única passagem),
+    depois consultado via busca binária — eliminando o loop O(N²) original.
 
     Entrada:
         [
@@ -37,7 +75,7 @@ def calculate_tf_idf(documents):
             ("R2", ["textura", "resolucao"]),
         ]
 
-    Saida:
+    Saída:
         [
             ("R1", [("fps", 0.5406), ("lag", 0.2703)]),
             ("R2", [("textura", 0.3466), ("resolucao", 0.3466)]),
@@ -46,9 +84,12 @@ def calculate_tf_idf(documents):
     total_documents = len(documents)
     result = []
 
+    # Passo 1: construir tabela de DF em uma única passagem — O(D * T * log V)
+    df_table = _build_df_table(documents)
+
+    # Passo 2: calcular TF-IDF por documento usando busca binária no df_table
     for doc_idx in range(total_documents):
         review_label, tokens = documents[doc_idx]
-        #TF-IDF precisa calcular cada palavra distinta da review.
         unique_tokens = _unique_tokens(tokens)
         weighted_terms = []
 
@@ -57,18 +98,17 @@ def calculate_tf_idf(documents):
             continue
 
         for token in unique_tokens:
-            #TF mede a importancia local da palavra na review.
+            # TF: importância local da palavra na review.
             term_frequency = _count_token(tokens, token) / len(tokens)
 
-            #DF conta em quantas reviews a palavra aparece.
-            document_frequency = 0
-            for other_idx in range(total_documents):
-                _, other_tokens = documents[other_idx]
-                if _find_index(_unique_tokens(other_tokens), token) != -1:
-                    document_frequency += 1
+            # DF: busca binária O(log V) em vez de varredura O(D).
+            pos = binary_search_tuples(df_table, token)
+            document_frequency = df_table[pos][1] if pos != -1 else 0
 
-            #IDF suavizado evita divisao por zero e reduz palavras comuns.
-            inverse_document_frequency = log((1 + total_documents) / (1 + document_frequency)) + 1
+            # IDF suavizado evita divisão por zero e reduz palavras comuns.
+            inverse_document_frequency = (
+                log((1 + total_documents) / (1 + document_frequency)) + 1
+            )
             weighted_terms.append((token, term_frequency * inverse_document_frequency))
 
         result.append((review_label, weighted_terms))
