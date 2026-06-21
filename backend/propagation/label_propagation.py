@@ -67,14 +67,7 @@ def _max_delta(old_scores, new_scores, categories):
     return max_delta
 
 
-def label_propagation(graph, iterations=20, threshold=0.001):
-    """
-    Propaga os rotulos das categorias pelo grafo.
-
-    O grafo deve ter arestas bidirecionais nos caminhos em que a informacao
-    precisa circular. Nos de categoria ficam fixos com score 1.0 neles mesmos.
-    """
-    categories = _category_labels(graph)
+def _initial_scores(graph, categories):
     scores = []
 
     for node_idx in range(graph.size()):
@@ -89,36 +82,62 @@ def label_propagation(graph, iterations=20, threshold=0.001):
 
         scores.append(node_scores)
 
+    return scores
+
+
+def _propagate_once(graph, scores, categories):
+    new_scores = []
+
+    for node_idx in range(graph.size()):
+        if graph.node_types[node_idx] == "category":
+            #Seeds finais nao mudam durante a propagacao.
+            new_scores.append(scores[node_idx])
+            continue
+
+        propagated = _empty_score_vector(categories)
+        total_weight = 0.0
+
+        for neighbor_idx, weight in graph.get_neighbors_by_idx(node_idx):
+            #Cada vizinho contribui proporcionalmente ao peso da aresta.
+            total_weight += weight
+            for category in categories:
+                _add_score(
+                    propagated,
+                    category,
+                    _get_score(scores[neighbor_idx], category) * weight,
+                )
+
+        if total_weight > 0.0:
+            #Divide pela soma dos pesos para evitar favorecer nos muito conectados.
+            scaled = []
+            for category, value in propagated:
+                scaled.append((category, value / total_weight))
+            propagated = _normalize(scaled)
+
+        new_scores.append(propagated)
+
+    return new_scores
+
+
+def _scores_result(graph, scores):
+    result = []
+    for node_idx in range(graph.size()):
+        result.append((graph.labels[node_idx], scores[node_idx]))
+    return result
+
+
+def label_propagation(graph, iterations=20, threshold=0.001):
+    """
+    Propaga os rotulos das categorias pelo grafo.
+
+    O grafo deve ter arestas bidirecionais nos caminhos em que a informacao
+    precisa circular. Nos de categoria ficam fixos com score 1.0 neles mesmos.
+    """
+    categories = _category_labels(graph)
+    scores = _initial_scores(graph, categories)
+
     for _ in range(iterations):
-        new_scores = []
-
-        for node_idx in range(graph.size()):
-            if graph.node_types[node_idx] == "category":
-                #Seeds finais nao mudam durante a propagacao.
-                new_scores.append(scores[node_idx])
-                continue
-
-            propagated = _empty_score_vector(categories)
-            total_weight = 0.0
-
-            for neighbor_idx, weight in graph.get_neighbors_by_idx(node_idx):
-                #Cada vizinho contribui proporcionalmente ao peso da aresta.
-                total_weight += weight
-                for category in categories:
-                    _add_score(
-                        propagated,
-                        category,
-                        _get_score(scores[neighbor_idx], category) * weight,
-                    )
-
-            if total_weight > 0.0:
-                #Divide pela soma dos pesos para evitar favorecer nos muito conectados.
-                scaled = []
-                for category, value in propagated:
-                    scaled.append((category, value / total_weight))
-                propagated = _normalize(scaled)
-
-            new_scores.append(propagated)
+        new_scores = _propagate_once(graph, scores, categories)
 
         if _max_delta(scores, new_scores, categories) < threshold:
             #Para quando as mudancas ficam pequenas o suficiente.
@@ -127,10 +146,28 @@ def label_propagation(graph, iterations=20, threshold=0.001):
 
         scores = new_scores
 
-    result = []
-    for node_idx in range(graph.size()):
-        result.append((graph.labels[node_idx], scores[node_idx]))
-    return result
+    return _scores_result(graph, scores)
+
+
+def label_propagation_with_history(graph, iterations=20, threshold=0.001):
+    """
+    Executa a propagacao e tambem registra o max_delta por iteracao.
+    Esse historico serve como evidencia matematica de convergencia.
+    """
+    categories = _category_labels(graph)
+    scores = _initial_scores(graph, categories)
+    history = []
+
+    for iteration in range(1, iterations + 1):
+        new_scores = _propagate_once(graph, scores, categories)
+        max_delta = _max_delta(scores, new_scores, categories)
+        history.append((iteration, max_delta))
+
+        scores = new_scores
+        if max_delta < threshold:
+            break
+
+    return _scores_result(graph, scores), history
 
 
 def classify_reviews(graph, scores):
