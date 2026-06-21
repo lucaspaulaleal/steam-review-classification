@@ -1,13 +1,19 @@
 # backend/api/main.py
 
-from fastapi import FastAPI, Query
+from pydantic import BaseModel, Field
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from backend.classification.realtime import classify_review_text
 from backend.graph.builder import build_tripartite_graph, mock_documents, mock_seed_groups
 from backend.propagation.label_propagation import classify_reviews, label_propagation
 from backend.utils import binary_search_tuples, sorted_insert_tuple
 from backend.preprocessing.tf_idf import _build_df_table, calculate_tf_idf
 from backend.graph.pmi import _build_cooccurrence_tables, calculate_pmi
 from backend.graph.graph import Graph
+
+
+class ReviewClassificationRequest(BaseModel):
+    text: str = Field(..., min_length=1, max_length=5000)
 
 app = FastAPI(
     title="Steam Review Classification API",
@@ -66,6 +72,60 @@ def mock_classifications():
         "items": response,
         "count": len(response),
     }
+
+
+@app.get("/graph/mock-data")
+def mock_graph_data():
+    graph = build_tripartite_graph(mock_documents(), mock_seed_groups())
+
+    nodes = []
+    for idx in range(graph.size()):
+        nodes.append(
+            {
+                "id": graph.labels[idx],
+                "label": graph.labels[idx],
+                "type": graph.node_types[idx],
+            }
+        )
+
+    links = []
+    for source_idx in range(graph.size()):
+        source_type = graph.node_types[source_idx]
+        for target_idx, weight in graph.get_neighbors_by_idx(source_idx):
+            target_type = graph.node_types[target_idx]
+            edge_type = "tfidf"
+
+            if source_type == "word" and target_type == "word":
+                edge_type = "pmi"
+            elif source_type == "word" and target_type == "category":
+                edge_type = "seed"
+
+            links.append(
+                {
+                    "source": graph.labels[source_idx],
+                    "target": graph.labels[target_idx],
+                    "type": edge_type,
+                    "weight": weight,
+                }
+            )
+
+    return {
+        "nodes": nodes,
+        "links": links,
+    }
+
+
+@app.post("/reviews/classify")
+def classify_review(request: ReviewClassificationRequest):
+    result = classify_review_text(request.text)
+
+    if result is None:
+        raise HTTPException(
+            status_code=400,
+            detail="A review precisa conter pelo menos uma palavra relevante.",
+        )
+
+    return result
 
 
 # ─────────────────────────────────────────────────────────────

@@ -40,7 +40,7 @@ cinza escuro fundo
   display: flex;
   flex: 1;
   width: 100%;
-  max-width: 800px;
+  max-width: 920px;
   flex-direction: column;
   align-items: flex-start;
   /* justify-content: space-between; */
@@ -111,6 +111,202 @@ cinza escuro fundo
     font-weight: bold;
 }
 
+.sectionEyebrow {
+    color: var(--gray);
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.realtimeClassifier {
+    background-color: #16283d;
+    border: 1px solid #2d4356;
+    margin: 1rem 0;
+    padding: 1rem;
+    width: 100%;
+}
+
+.realtimeHeader {
+    align-items: flex-start;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.realtimeHeader h2 {
+    color: var(--white);
+    font-size: 1.2rem;
+    margin-top: .25rem;
+}
+
+.categoryBadge {
+    border-radius: 4px;
+    color: #06111d;
+    font-size: .8rem;
+    font-weight: 800;
+    min-width: 6.5rem;
+    padding: .45rem .65rem;
+    text-align: center;
+}
+
+.classifierForm {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.reviewInput {
+    background-color: #0d1c2b;
+    border: 1px solid #34536a;
+    color: var(--light-gray);
+    font: inherit;
+    min-height: 8rem;
+    padding: .8rem;
+    resize: vertical;
+    width: 100%;
+}
+
+.reviewInput:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+.formFooter {
+    align-items: center;
+    color: var(--gray);
+    display: flex;
+    font-size: .8rem;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.classifyButton {
+    background-color: var(--primary);
+    border: none;
+    color: #06111d;
+    cursor: pointer;
+    font-weight: 800;
+    min-height: 2.6rem;
+    padding: 0 1.25rem;
+}
+
+.classifyButton:disabled {
+    background-color: #3b4b59;
+    color: #91a2af;
+    cursor: not-allowed;
+}
+
+.errorMessage {
+    background-color: #4a2028;
+    color: #ffd8df;
+    font-size: .9rem;
+    margin-top: 1rem;
+    padding: .75rem;
+}
+
+.resultPanel {
+    border-top: 1px solid #2d4356;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+    margin-top: 1rem;
+    padding-top: 1rem;
+}
+
+.resultSummary {
+    background-color: #0d1c2b;
+    padding: 1rem;
+}
+
+.resultSummary span {
+    color: var(--gray);
+    display: block;
+    font-size: .75rem;
+    font-weight: 700;
+    margin-bottom: .4rem;
+}
+
+.resultSummary strong {
+    color: var(--white);
+    display: block;
+    font-size: 1.4rem;
+}
+
+.resultSummary p {
+    color: var(--primary);
+    font-size: .9rem;
+    margin-top: .35rem;
+}
+
+.scoreList {
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+}
+
+.scoreItem {
+    min-width: 0;
+}
+
+.scoreHeader {
+    color: var(--light-gray);
+    display: flex;
+    font-size: .85rem;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-bottom: .3rem;
+}
+
+.scoreTrack {
+    background-color: #0d1c2b;
+    height: .55rem;
+    overflow: hidden;
+}
+
+.scoreFill {
+    height: 100%;
+    min-width: .15rem;
+}
+
+.tokenList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    grid-column: 1 / -1;
+}
+
+.tokenList span {
+    background-color: #21364d;
+    color: var(--light-gray);
+    font-size: .75rem;
+    padding: .3rem .45rem;
+}
+
+.performance {
+    background-color: #ffcf5a;
+}
+
+.graficos {
+    background-color: #66c0f4;
+}
+
+.gameplay {
+    background-color: #75d66b;
+}
+
+.narrativa {
+    background-color: #d38bff;
+}
+
+.graphPanel {
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    margin-top: 40px;
+    overflow: hidden;
+    width: 100%;
+}
+
 
 
 /* Filtro */
@@ -130,6 +326,7 @@ cinza escuro fundo
     margin-top: .5rem;
     margin-bottom: .5rem;
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
 
 }
@@ -153,6 +350,7 @@ cinza escuro fundo
     margin-top: 1rem;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     gap: .5rem;
     align-items: center;
 }
@@ -173,7 +371,7 @@ cinza escuro fundo
 /* Reviews */
 
 .ContainerReviews {
-    margin-top: 1rem;
+    margin-top: 40px;
     width: 100%;
 }
 
@@ -271,6 +469,30 @@ a.secondary {
 @media (max-width: 600px) {
   .main {
     padding: 48px 24px;
+  }
+
+  .analiseGeral {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .containerGeralMenor {
+    width: 100%;
+  }
+
+  .realtimeHeader,
+  .formFooter {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .categoryBadge,
+  .classifyButton {
+    width: 100%;
+  }
+
+  .resultPanel {
+    grid-template-columns: 1fr;
   }
 
   .intro {
