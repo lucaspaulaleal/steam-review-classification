@@ -1,3 +1,7 @@
+from math import log
+
+import pytest
+
 from backend.graph.builder import build_tripartite_graph, mock_documents, mock_seed_groups
 from backend.graph.pmi import calculate_pmi
 from backend.preprocessing.tf_idf import calculate_tf_idf
@@ -41,6 +45,30 @@ def test_tf_idf_returns_weighted_terms_by_review():
     assert _find_tuple_by_first(r1[1], "fps")[1] > _find_tuple_by_first(r1[1], "lag")[1]
 
 
+def test_tf_idf_matches_expected_smoothed_values():
+    documents = [
+        ("R1", ["fps", "fps", "lag"]),
+        ("R2", ["fps"]),
+    ]
+
+    result = calculate_tf_idf(documents)
+    r1_terms = _find_tuple_by_first(result, "R1")[1]
+    r2_terms = _find_tuple_by_first(result, "R2")[1]
+
+    expected_fps_r1 = (2 / 3) * (log((1 + 2) / (1 + 2)) + 1)
+    expected_lag_r1 = (1 / 3) * (log((1 + 2) / (1 + 1)) + 1)
+
+    assert _find_tuple_by_first(r1_terms, "fps")[1] == pytest.approx(expected_fps_r1)
+    assert _find_tuple_by_first(r1_terms, "lag")[1] == pytest.approx(expected_lag_r1)
+    assert _find_tuple_by_first(r2_terms, "fps")[1] == pytest.approx(1.0)
+
+
+def test_tf_idf_handles_empty_document():
+    result = calculate_tf_idf([("R1", []), ("R2", ["fps"])])
+
+    assert _find_tuple_by_first(result, "R1") == ("R1", [])
+
+
 def test_pmi_returns_positive_word_cooccurrence_edges():
     documents = [
         ("R1", ["fps", "lag"]),
@@ -52,6 +80,35 @@ def test_pmi_returns_positive_word_cooccurrence_edges():
 
     assert _find_pair(result, "fps", "lag") is not None
     assert _find_pair(result, "historia", "enredo") is not None
+
+
+def test_pmi_matches_expected_value_and_ignores_duplicate_tokens_in_review():
+    documents = [
+        ("R1", ["fps", "fps", "lag"]),
+        ("R2", ["fps"]),
+        ("R3", ["historia"]),
+    ]
+
+    result = calculate_pmi(documents)
+    fps_lag = _find_pair(result, "fps", "lag")
+
+    expected_pmi = log((1 / 3) / ((2 / 3) * (1 / 3)))
+    assert fps_lag is not None
+    assert fps_lag[2] == pytest.approx(expected_pmi)
+
+
+def test_pmi_returns_empty_for_empty_corpus_and_non_positive_pairs():
+    assert calculate_pmi([]) == []
+
+    result = calculate_pmi(
+        [
+            ("R1", ["fps", "lag"]),
+            ("R2", ["fps"]),
+            ("R3", ["lag"]),
+        ]
+    )
+
+    assert _find_pair(result, "fps", "lag") is None
 
 
 def test_tripartite_graph_contains_expected_layers_and_edges():
