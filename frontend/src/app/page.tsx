@@ -77,8 +77,10 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <Image src="/logo.svg" alt="Steam Review Classification" width={40} height={40} />
-        <p>Steam Review Classification</p>
+        <div>
+            <Image src="/logo.svg" alt="Steam Review Classification" width={40} height={40} />
+            <p>Steam Review Classification</p>
+        </div>
       </div>
 
       <main className={styles.main}>

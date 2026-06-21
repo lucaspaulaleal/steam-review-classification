@@ -58,7 +58,20 @@ cinza escuro fundo
     gap: 2rem;
     align-items: center;
     font-weight: bold;
+    justify-content: center;
 }
+
+.header div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    max-width: 920px;
+    width: 100%;
+    gap: 1rem;
+    justify-content: left;
+    font-size: 1.5rem;
+}
+
 
 /* Seção de título de Jogo */
 
