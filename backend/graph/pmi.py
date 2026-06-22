@@ -115,11 +115,14 @@ def calculate_pmi(corpus):
         probability_a = count_a / total_documents
         probability_b = count_b / total_documents
 
-        # PMI alto indica associação acima do acaso.
+        # PMI clássico
         pmi = log(probability_pair / (probability_a * probability_b))
+        
+        # NPMI (Normalized PMI): normaliza o score entre [-1, 1]
+        npmi = pmi / -log(probability_pair)
 
-        if pmi > 0:
-            # PMI negativo não ajuda como ligação semântica neste grafo.
-            pmi_edges.append((word_a, word_b, pmi))
+        if npmi > 0:
+            # NPMI negativo não ajuda como ligação semântica neste grafo.
+            pmi_edges.append((word_a, word_b, npmi))
 
     return pmi_edges    

@@ -185,10 +185,10 @@ def classify_reviews(graph, scores):
                 node_scores = score_values
                 break
 
-        best_category = ""
-        best_score = -1.0
+        best_category = "Outros"
+        best_score = 0.0
         for category, value in node_scores:
-            #A categoria final e a de maior score.
+            #A categoria final e a de maior score. (Deve ser > 0.0 para vencer 'Outros')
             if value > best_score:
                 best_category = category
                 best_score = value
