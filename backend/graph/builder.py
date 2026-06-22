@@ -5,13 +5,6 @@ from backend.graph.pmi import calculate_pmi
 from backend.preprocessing.tf_idf import calculate_tf_idf
 
 
-def _find_index(items, target):
-    for i in range(len(items)):
-        if items[i] == target:
-            return i
-    return -1
-
-
 def _category_seed_pairs(seed_groups):
     pairs = []
     for category, seeds in seed_groups:
