@@ -13,7 +13,7 @@
 ## 🌐 Deploy em Produção
 
 A aplicação pode ser acessada diretamente pelo navegador sem a necessidade de instalar o Docker:
-- **Interface Visual (Frontend)**: [Render Frontend Web](https://steam-review-classification.vercel.app/)
+- **Interface Visual (Frontend)**: [Render Frontend Web](https://steam-review-classification-frontend.onrender.com)
 - **API (Backend)**: [Render Backend Docs](https://steam-review-backend.onrender.com/docs)
 
 *(Nota: O backend gratuito na Render pode levar cerca de 50 segundos para despertar na primeira requisição.)*
