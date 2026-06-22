@@ -75,18 +75,17 @@ def mock_documents():
     #Reviews pequenas simulando o output já lematizado do NLP.
     #Balanceado com 1 review por categoria para que o CMN não penalize desproporcionalmente.
     return [
-        ("R1", ["fps", "lag", "crash", "trav"]),
-        ("R2", ["textur", "grafic", "resoluca", "visual"]),
+        ("R1", ["fp", "lag", "crash", "trav"]),
+        ("R2", ["text", "gráf", "resoluç", "visual"]),
         ("R3", ["control", "gameplay", "divers", "jogabil"]),
-        ("R4", ["histori", "enred", "personag", "narrativ"]),
+        ("R4", ["histór", "enred", "person", "narr"]),
     ]
 
 
 def mock_seed_groups():
-    #Seeds massivamente expandidas com dezenas de gírias gamers e stems do RSLP
     return [
-        ("Performance", ["fps", "lag", "crash", "stuttering", "trav", "otimiz", "desempenh", "bug", "queda", "frame", "gargal", "pesad", "lev", "roda", "rodou", "liso", "pc", "rtx", "gtx", "processador", "placa", "memoria", "ram", "cpu", "gpu", "engin"]),
-        ("Graficos", ["textur", "resoluca", "grafic", "visual", "lind", "fei", "beleza", "sombra", "iluminaca", "raytracing", "paisag", "cenari", "realist", "feio", "maravilh", "4k"]),
-        ("Gameplay", ["control", "gameplay", "divers", "jogabil", "mecani", "mecan", "jogar", "tiro", "dirigir", "missa", "combat", "loot", "skill", "habilidad", "farm", "grind", "fisica", "moviment", "pul", "tirotei", "arma", "carr", "chef", "boss", "fase", "level", "dificuld", "fluid", "respond", "roaming", "assalt", "roub", "tun", "heist", "onlin", "viciant", "corrid"]),
-        ("Narrativa", ["histori", "enred", "personag", "narrativ", "campanh", "fina", "lore", "dialog", "dublag", "legend", "tradu", "final", "emociona", "vila", "heroi", "plot", "twist", "roteir", "escrev", "leitur", "livr"]),
+        ("Performance", ['fp', 'lag', 'crash', 'stuttering', 'trav', 'otimiz', 'desempenh', 'bug', 'qued', 'fram', 'gargal', 'pes', 'lev', 'rod', 'rod', 'lis', 'pc', 'rtx', 'gtx', 'process', 'plac', 'memor', 'ram', 'cpu', 'gpu', 'engin']),
+        ("Gráfico", ['text', 'resoluç', 'gráf', 'visual', 'lind', 'fei', 'bel', 'sombr', 'ilumin', 'raytracing', 'pais', 'cen', 'real', 'fei', 'maravilh', '4k']),
+        ("Gameplay", ['control', 'gameplay', 'divers', 'jogabil', 'mecân', 'jog', 'tir', 'dirig', 'miss', 'combat', 'loot', 'skill', 'habil', 'farm', 'grind', 'físic', 'mov', 'pul', 'tirotei', 'arm', 'carr', 'chef', 'bos', 'fas', 'level', 'dificuldad', 'flu', 'respond', 'roaming', 'assalt', 'roub', 'tuning', 'heist', 'onlin', 'vici', 'corr']),
+        ("Narrativa", ['histór', 'enred', 'person', 'narr', 'campanh', 'final', 'lor', 'diálog', 'dubl', 'legend', 'traduç', 'emocion', 'vil', 'heró', 'plot', 'twist', 'rot', 'escrit', 'leit', 'livr']),
     ]

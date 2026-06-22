@@ -77,8 +77,10 @@ def classify_review_text(text, tf_idf_threshold=0.0, pmi_threshold=0.0, damping_
     Classifica uma review digitada em tempo real.
     """
     nlp_tokens = _nlp_review_tokens(text)
-    simple_tokens = _simple_review_tokens(text)
-    tokens = _merge_tokens(nlp_tokens, simple_tokens)
+    if nlp_tokens:
+        tokens = nlp_tokens
+    else:
+        tokens = _simple_review_tokens(text)
 
     if len(tokens) == 0:
         return None
