@@ -1,11 +1,34 @@
 #backend/propagation/label_propagation.py
 
 
-def _find_index(items, target):
-    for i in range(len(items)):
-        if items[i] == target:
-            return i
+def _binary_search(items, target):
+    left = 0
+    right = len(items) - 1
+
+    while left <= right:
+        mid = (left + right) // 2
+        if items[mid] == target:
+            return mid
+        if items[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+
     return -1
+
+
+def _find_insert_position(items, target):
+    left = 0
+    right = len(items)
+
+    while left < right:
+        mid = (left + right) // 2
+        if items[mid] < target:
+            left = mid + 1
+        else:
+            right = mid
+
+    return left
 
 
 def _category_labels(graph):
@@ -13,7 +36,8 @@ def _category_labels(graph):
     for i in range(graph.size()):
         #Somente nos de categoria viram dimensoes do vetor de scores.
         if graph.node_types[i] == "category":
-            categories.append(graph.labels[i])
+            insert_pos = _find_insert_position(categories, graph.labels[i])
+            categories.insert(insert_pos, graph.labels[i])
     return categories
 
 
@@ -75,7 +99,7 @@ def _initial_scores(graph, categories):
 
         if graph.node_types[node_idx] == "category":
             #Categoria comeca fixa nela mesma, como rotulo conhecido.
-            category_idx = _find_index(categories, graph.labels[node_idx])
+            category_idx = _binary_search(categories, graph.labels[node_idx])
             if category_idx != -1:
                 label, _ = node_scores[category_idx]
                 node_scores[category_idx] = (label, 1.0)
