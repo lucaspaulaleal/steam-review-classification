@@ -128,6 +128,7 @@ export default function Home() {
                         {datasetReviews.length > 0 
                         ? `${datasetReviews.length.toLocaleString("pt-BR")} análises processadas` 
                         : "Carregando análises..."}
+                        {/* 2.800 análises processadas */}
                    </p>
               </div>
               <div className={styles.containerGeralMenor}>
