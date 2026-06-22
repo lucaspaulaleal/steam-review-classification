@@ -142,6 +142,12 @@ As instruções detalhadas para avaliação do projeto do zero estão em [`docs/
 
 ---
 
+## 🤖 Inteligência Artificial como Project Manager
+
+Durante a etapa final do projeto, utilizamos agentes autônomos de Inteligência Artificial (LLMs) como *Planners* e *Project Managers*. A IA foi responsável por fazer um levantamento arquitetural completo, elencar as *issues* necessárias para a conclusão do escopo, otimizar tarefas de código e auxiliar os desenvolvedores na implementação e testes das fórmulas matemáticas complexas (como Sublinear TF Scaling e NPMI). Essa abordagem garantiu uma refatoração segura e o cumprimento rigoroso de todas as métricas exigidas pela disciplina.
+
+---
+
 ## 👥 Equipe do Projeto
 
 Desenvolvido por estudantes de Engenharia de Software para a disciplina de **Estruturas de Dados 2**.
