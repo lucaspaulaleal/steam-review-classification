@@ -347,6 +347,8 @@
     background-color: var(--background-blue);
     padding: 1rem;
     width: 100%;
+    border: 1px solid #2d4356;
+
 }
 
 .ContainerFiltro p {

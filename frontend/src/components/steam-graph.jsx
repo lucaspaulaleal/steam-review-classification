@@ -204,10 +204,10 @@ export default memo(function SteamGraph() {
 
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: "14px" }}>
-        <div style={{ fontSize: "13px", fontWeight: 700, color: "#e2e8f0", letterSpacing: "1px" }}>
+        <div style={{ fontSize: "16px", fontWeight: 700, color: "#e2e8f0", letterSpacing: "1px" }}>
           GRAFO TRIPARTIDO — STEAM REVIEWS
         </div>
-        <div style={{ fontSize: "10px", color: "#475569", marginTop: "2px" }}>
+        <div style={{ fontSize: "13px", color: "#475569", marginTop: "2px" }}>
           Label Propagation via Reviews → Palavras → Categorias
         </div>
       </div>
@@ -216,7 +216,7 @@ export default memo(function SteamGraph() {
       <div style={{ display: "flex", gap: "8px", justifyContent: "center", marginBottom: "10px", flexWrap: "wrap" }}>
         {[["tfidf", "TF-IDF  review→palavra"], ["pmi", "PMI  palavra↔palavra"], ["seed", "Seed  palavra→categoria"]].map(([key, label]) => (
           <button key={key} onClick={() => toggle(key)} style={{
-            padding: "3px 10px", borderRadius: "3px", fontSize: "10px", cursor: "pointer",
+            padding: "3px 10px", borderRadius: "3px", fontSize: "13px", cursor: "pointer",
             border: `1.5px solid ${filter[key] ? E[key] : "#1e293b"}`,
             color: filter[key] ? E[key] : "#334155",
             background: filter[key] ? E[key] + "12" : "transparent",
@@ -238,7 +238,7 @@ export default memo(function SteamGraph() {
       </div>
 
       {/* Hover info */}
-      <div style={{ textAlign: "center", minHeight: "18px", fontSize: "11px", color: "#94a3b8", margin: "4px 0" }}>
+      <div style={{ textAlign: "center", minHeight: "18px", fontSize: "13px", color: "#94a3b8", margin: "4px 0" }}>
         {hovered ? (
           <span>
             <span style={{ color: C[hovered.type], fontWeight: 700 }}>{hovered.label}</span>
@@ -264,7 +264,7 @@ export default memo(function SteamGraph() {
               border: `1.5px solid ${C[type]}`,
               background: C[type] + "25",
             }} />
-            <span style={{ fontSize: "10px", color: "#475569" }}>{label}</span>
+            <span style={{ fontSize: "12px", color: "#475569" }}>{label}</span>
           </div>
         ))}
       </div>
