@@ -71,7 +71,7 @@ def _response_from_classification(classification, tokens):
     }
 
 
-def classify_review_text(text):
+def classify_review_text(text, tf_idf_threshold=0.0, pmi_threshold=0.0, damping_factor=0.85):
     """
     Classifica uma review digitada em tempo real.
 
@@ -86,8 +86,8 @@ def classify_review_text(text):
         return None
 
     documents = mock_documents() + [(REALTIME_REVIEW_LABEL, tokens)]
-    graph = build_tripartite_graph(documents, mock_seed_groups())
-    scores = label_propagation(graph, iterations=30, threshold=0.0001)
+    graph = build_tripartite_graph(documents, mock_seed_groups(), tf_idf_threshold=tf_idf_threshold, pmi_threshold=pmi_threshold)
+    scores = label_propagation(graph, iterations=30, threshold=0.0001, damping_factor=damping_factor)
     classifications = classify_reviews(graph, scores)
     classification = _find_classification(classifications, REALTIME_REVIEW_LABEL)
 

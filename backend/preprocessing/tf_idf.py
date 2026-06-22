@@ -62,7 +62,7 @@ def _build_df_table(documents):
     return df_table
 
 
-def calculate_tf_idf(documents):
+def calculate_tf_idf(documents, threshold=0.0):
     """
     Calcula TF-IDF manualmente usando listas.
 
@@ -110,7 +110,11 @@ def calculate_tf_idf(documents):
             inverse_document_frequency = (
                 log((1 + total_documents) / (1 + document_frequency)) + 1
             )
-            weighted_terms.append((token, term_frequency * inverse_document_frequency))
+            
+            tf_idf_score = term_frequency * inverse_document_frequency
+            
+            if tf_idf_score > threshold:
+                weighted_terms.append((token, tf_idf_score))
 
         result.append((review_label, weighted_terms))
 

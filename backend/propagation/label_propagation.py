@@ -109,7 +109,7 @@ def _initial_scores(graph, categories):
     return scores
 
 
-def _propagate_once(graph, scores, categories):
+def _propagate_once(graph, scores, categories, initial_scores, damping_factor):
     new_scores = []
 
     for node_idx in range(graph.size()):
@@ -137,8 +137,16 @@ def _propagate_once(graph, scores, categories):
             for category, value in propagated:
                 scaled.append((category, value / total_weight))
             propagated = _normalize(scaled)
+            
+        # Mistura com o score inicial usando o damping_factor
+        blended = []
+        for category in categories:
+            prop_val = _get_score(propagated, category)
+            init_val = _get_score(initial_scores[node_idx], category)
+            final_val = (damping_factor * prop_val) + ((1.0 - damping_factor) * init_val)
+            blended.append((category, final_val))
 
-        new_scores.append(propagated)
+        new_scores.append(blended)
 
     return new_scores
 
@@ -150,7 +158,7 @@ def _scores_result(graph, scores):
     return result
 
 
-def label_propagation(graph, iterations=20, threshold=0.001):
+def label_propagation(graph, iterations=20, threshold=0.001, damping_factor=0.85):
     """
     Propaga os rotulos das categorias pelo grafo.
 
@@ -158,10 +166,11 @@ def label_propagation(graph, iterations=20, threshold=0.001):
     precisa circular. Nos de categoria ficam fixos com score 1.0 neles mesmos.
     """
     categories = _category_labels(graph)
-    scores = _initial_scores(graph, categories)
+    initial = _initial_scores(graph, categories)
+    scores = initial
 
     for _ in range(iterations):
-        new_scores = _propagate_once(graph, scores, categories)
+        new_scores = _propagate_once(graph, scores, categories, initial, damping_factor)
 
         if _max_delta(scores, new_scores, categories) < threshold:
             #Para quando as mudancas ficam pequenas o suficiente.
@@ -173,17 +182,18 @@ def label_propagation(graph, iterations=20, threshold=0.001):
     return _scores_result(graph, scores)
 
 
-def label_propagation_with_history(graph, iterations=20, threshold=0.001):
+def label_propagation_with_history(graph, iterations=20, threshold=0.001, damping_factor=0.85):
     """
     Executa a propagacao e tambem registra o max_delta por iteracao.
     Esse historico serve como evidencia matematica de convergencia.
     """
     categories = _category_labels(graph)
-    scores = _initial_scores(graph, categories)
+    initial = _initial_scores(graph, categories)
+    scores = initial
     history = []
 
     for iteration in range(1, iterations + 1):
-        new_scores = _propagate_once(graph, scores, categories)
+        new_scores = _propagate_once(graph, scores, categories, initial, damping_factor)
         max_delta = _max_delta(scores, new_scores, categories)
         history.append((iteration, max_delta))
 

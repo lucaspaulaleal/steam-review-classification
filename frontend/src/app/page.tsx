@@ -122,9 +122,14 @@ export default function Home() {
 
             <div className={styles.analiseGeral}>
               <div className={styles.containerGeral}>
-                <p>ANÁLISES DA COMUNIDADE (Kaggle)</p>
-                <h2 className={styles.positiveAnalises}>Ligeiramente Positivas</h2>
-                <p>2.800 análises processadas</p>
+                    <p>ANÁLISES DA COMUNIDADE (Kaggle)</p>
+                    <h2 className={styles.positiveAnalises}>Ligeiramente Positivas</h2>
+                    <p>
+                        {datasetReviews.length > 0 
+                        ? `${datasetReviews.length.toLocaleString("pt-BR")} análises processadas` 
+                        : "Carregando análises..."}
+                        {/* 2.800 análises processadas */}
+                   </p>
               </div>
               <div className={styles.containerGeralMenor}>
                 <div className={styles.containerGeral}>
@@ -177,37 +182,41 @@ export default function Home() {
                 .filter(rev => filterCategory === "Todas" || rev.category.toLowerCase().includes(filterCategory.toLowerCase()))
                 .sort((a, b) => sortOrder === "desc" ? b.votes_helpful - a.votes_helpful : a.votes_helpful - b.votes_helpful)
                 .map((rev) => (
-                <div key={rev.review_id} className={styles.ReviewCard}>
-                  <div className={styles.ReviewCardHeader}>
-                    <div className={styles.ReviewIconContainer}>
-                      <Image 
-                        src={rev.recommended ? "/like.svg" : "/dislike.svg"} 
-                        alt="" 
-                        width={32} 
-                        height={32} 
-                        className={rev.recommended ? styles.iconLike : styles.iconDislike}
-                      />
-                    </div>
-                    <div>
-                      <p className={rev.recommended ? styles.ReviewRecomendationPos : styles.ReviewRecomendationNeg}>
-                        {rev.recommended ? "Recomenda" : "Não recomenda"}
-                      </p>
-                      <p className={styles.ReviewId}>
-                        Review #{rev.review_id} ({rev.votes_helpful} votos úteis)
-                      </p>
-                      <div className={styles.ReviewMarcadores}>
-                        <div className={`${styles.ReviewMarcador} ${categoryClass(rev.category)}`}>
-                          {rev.category}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    <div key={rev.review_id} className={styles.ReviewCard}>
+                        <div className={styles.ReviewCardHeader}>
+                            <div className={styles.ReviewIconContainer}>
+                                <Image 
+                                    src={rev.recommended ? "/like.svg" : "/dislike.svg"} 
+                                    alt="" 
+                                    width={32} 
+                                    height={32} 
+                                    className={rev.recommended ? styles.iconLike : styles.iconDislike}
+                                />
+                            </div>
 
-                  <div className={styles.ReviewContent}>
-                    <p>{rev.review}</p>
-                  </div>
-                </div>
-              ))}
+                                   
+                            <div className={styles.ReviewInfo}>
+                                <p className={rev.recommended ? styles.ReviewRecomendationPos : styles.ReviewRecomendationNeg}>
+                                    {rev.recommended ? "Recomenda" : "Não recomenda"}
+                                </p>
+                                <p className={styles.ReviewId}>
+                                    Review #{rev.review_id} ({rev.votes_helpful} votos úteis)
+                                </p>
+                            </div>
+                                    
+                            <div className={styles.ReviewMarcadores}>
+                                <p className={`${styles.ReviewMarcador} ${categoryClass(rev.category)}`}>
+                                    {rev.category}
+                                </p>
+                            </div>
+    
+                        </div>
+
+                        <div className={styles.ReviewContent}>
+                            <p>{rev.review}</p>
+                        </div>
+                    </div>
+                ))}
             </div>
             
           </div>
