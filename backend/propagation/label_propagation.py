@@ -195,9 +195,35 @@ def label_propagation_with_history(graph, iterations=20, threshold=0.001):
 
 
 def classify_reviews(graph, scores):
-    """Retorna a melhor categoria para cada no de review."""
+    """
+    Retorna a melhor categoria para cada no de review aplicando Class Mass Normalization (CMN).
+    Aplica a normalizacao pelas massas totais acumuladas nas reviews para evitar que 
+    categorias superconectadas (hubs) dominem a classificacao.
+    """
     classifications = []
+    
+    # 1. Calcular a massa total (soma de scores) de cada categoria em todos os nos de review
+    class_mass = {}
+    for node_idx in range(graph.size()):
+        if graph.node_types[node_idx] != "review":
+            continue
+            
+        label = graph.labels[node_idx]
+        node_scores = []
+        for score_label, score_values in scores:
+            if score_label == label:
+                node_scores = score_values
+                break
+                
+        for category, value in node_scores:
+            class_mass[category] = class_mass.get(category, 0.0) + value
 
+    # Evitar divisao por zero caso uma categoria tenha massa 0
+    for cat in class_mass:
+        if class_mass[cat] == 0.0:
+            class_mass[cat] = 1.0
+
+    # 2. Classificar cada review ajustando o score pela massa da classe
     for node_idx in range(graph.size()):
         if graph.node_types[node_idx] != "review":
             continue
@@ -212,10 +238,11 @@ def classify_reviews(graph, scores):
         best_category = "Outros"
         best_score = 0.0
         for category, value in node_scores:
-            #A categoria final e a de maior score. (Deve ser > 0.0 para vencer 'Outros')
-            if value > best_score:
+            # A categoria final e a de maior score normalizado (adjusted_score)
+            adjusted_score = value / class_mass.get(category, 1.0)
+            if adjusted_score > best_score:
                 best_category = category
-                best_score = value
+                best_score = adjusted_score
 
         classifications.append((label, best_category, best_score, node_scores))
 
