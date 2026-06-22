@@ -76,16 +76,16 @@ def mock_documents():
     #Balanceado com 1 review por categoria para que o CMN não penalize desproporcionalmente.
     return [
         ("R1", ["fp", "lag", "crash", "trav"]),
-        ("R2", ["text", "gráf", "resoluç", "visual"]),
-        ("R3", ["control", "gameplay", "divers", "jogabil"]),
-        ("R4", ["histór", "enred", "person", "narr"]),
+        ("R2", ["text", "graf", "resoluca", "visual"]),
+        ("R3", ["control", "gameplay", "diversa", "jogabil"]),
+        ("R4", ["hist", "enred", "person", "narr"]),
     ]
 
 
 def mock_seed_groups():
     return [
         ("Performance", ['fp', 'lag', 'crash', 'stuttering', 'trav', 'otimiz', 'desempenh', 'bug', 'qued', 'fram', 'gargal', 'pes', 'lev', 'rod', 'rod', 'lis', 'pc', 'rtx', 'gtx', 'process', 'plac', 'memor', 'ram', 'cpu', 'gpu', 'engin']),
-        ("Gráfico", ['text', 'resoluç', 'gráf', 'visual', 'lind', 'fei', 'bel', 'sombr', 'ilumin', 'raytracing', 'pais', 'cen', 'real', 'fei', 'maravilh', '4k']),
-        ("Gameplay", ['control', 'gameplay', 'divers', 'jogabil', 'mecân', 'jog', 'tir', 'dirig', 'miss', 'combat', 'loot', 'skill', 'habil', 'farm', 'grind', 'físic', 'mov', 'pul', 'tirotei', 'arm', 'carr', 'chef', 'bos', 'fas', 'level', 'dificuldad', 'flu', 'respond', 'roaming', 'assalt', 'roub', 'tuning', 'heist', 'onlin', 'vici', 'corr']),
-        ("Narrativa", ['histór', 'enred', 'person', 'narr', 'campanh', 'final', 'lor', 'diálog', 'dubl', 'legend', 'traduç', 'emocion', 'vil', 'heró', 'plot', 'twist', 'rot', 'escrit', 'leit', 'livr']),
+        ("Gráfico", ['text', 'resoluca', 'graf', 'visual', 'lind', 'fei', 'bel', 'sombr', 'iluminaca', 'raytracing', 'pais', 'cenari', 'real', 'fei', 'maravilh', '4k']),
+        ("Gameplay", ['control', 'gameplay', 'diversa', 'jogabil', 'mecan', 'jog', 'tir', 'dirig', 'missa', 'combat', 'loot', 'skill', 'habil', 'farm', 'grind', 'fisic', 'mov', 'pul', 'tirotei', 'arm', 'carr', 'chef', 'bos', 'fas', 'level', 'dificuldad', 'flu', 'respond', 'roaming', 'assalt', 'roub', 'tuning', 'heist', 'onlin', 'vici', 'corr']),
+        ("Narrativa", ['hist', 'enred', 'person', 'narr', 'campanh', 'final', 'lor', 'dialog', 'dubl', 'legend', 'traduca', 'emocion', 'vila', 'hero', 'plot', 'twist', 'rot', 'escrit', 'leit', 'livr']),
     ]

@@ -269,7 +269,9 @@ def demo_binary_search(
     - **Passo 4** — `_build_cooccurrence_tables` com busca binária (PMI)
     """
     documents = mock_documents()
-    palavra_buscada = palavra.lower()
+    from backend.preprocessing.nlp import clean_text
+    tokens = clean_text(palavra)
+    palavra_buscada = tokens[0] if tokens else palavra.lower()
 
     # ── PASSO 1 & 3 — df_table (TF-IDF) ──────────────────────────────────
     df_table = _build_df_table(documents)
