@@ -3,6 +3,8 @@
 from pydantic import BaseModel, Field
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+import pandas as pd
+import os
 from backend.classification.realtime import classify_review_text
 from backend.graph.builder import build_tripartite_graph, mock_documents, mock_seed_groups
 from backend.propagation.label_propagation import classify_reviews, label_propagation
@@ -72,6 +74,105 @@ def mock_classifications():
         "items": response,
         "count": len(response),
     }
+
+
+@app.get("/reviews/dataset")
+def get_dataset_reviews(limit: int = 5):
+    """Retorna as top reviews do dataset real baseado em votos úteis."""
+    import json
+    cache_path = "datasets/steam_reviews_cache.json"
+    if os.path.exists(cache_path):
+        with open(cache_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+            
+    csv_path = "datasets/steam_reviews_ptbr_top_game.csv"
+    if not os.path.exists(csv_path):
+        return {"items": [], "count": 0, "message": "Dataset não encontrado."}
+    
+    try:
+        df = pd.read_csv(csv_path)
+        # Ordena pelas mais úteis
+        if 'votes_helpful' in df.columns:
+            df = df.sort_values(by='votes_helpful', ascending=False)
+        
+        import re
+        records = []
+        buckets = {
+            "Performance": [],
+            "Gameplay": [],
+            "Gráfico": [],
+            "Narrativa": [],
+            "Outros": []
+        }
+        
+        # Palavras indicativas de português vs ingles
+        pt_words = r'\b(que|não|sim|jogo|muito|bom|ruim|mais|para|com|como|mas|ele|ela|uma|um|jogar|história|graficos|gráfico)\b'
+        eng_words = r'\b(the|and|this|game|is|it|that|for|with|best|worst|ever)\b'
+        
+        from backend.classification.realtime import classify_review_text
+
+        for _, row in df.iterrows():
+            text = str(row['review'])
+            
+            # Filtro rígido de idioma (Pula se não tiver PT-BR ou se tiver muita palavra em INGLÊS)
+            if len(text) < 15:
+                continue
+            if len(re.findall(pt_words, text.lower())) < 1:
+                continue
+            if len(re.findall(eng_words, text.lower())) >= 2:
+                continue
+                
+            cls = classify_review_text(text)
+            category = cls["category"] if cls else "Outros"
+            
+            # Normalização de nomenclatura
+            if "grafic" in category.lower() or "gráfic" in category.lower():
+                category = "Gráfico"
+            
+            if category not in buckets:
+                buckets[category] = []
+                
+            buckets[category].append({
+                "review_id": row['review_id'],
+                "review": text,
+                "recommended": row['recommended'],
+                "votes_helpful": row['votes_helpful'],
+                "category": category,
+            })
+            
+            total_collected = sum(len(v) for v in buckets.values())
+            
+            # Cotas mínimas (para garantir mais volume)
+            has_min_quota = (
+                len(buckets.get("Performance", [])) >= 15 and
+                len(buckets.get("Gameplay", [])) >= 15 and
+                len(buckets.get("Gráfico", [])) >= 15 and
+                len(buckets.get("Narrativa", [])) >= 15
+            )
+            
+            # Para de processar se atingiu as cotas E atingiu um bom limite
+            if has_min_quota and total_collected >= 100:
+                break
+                
+            # Segurança para não processar o CSV inteiro se as cotas não forem batidas
+            if total_collected >= 250:
+                break
+                
+        for cat_list in buckets.values():
+            records.extend(cat_list)
+            
+        # Re-ordena as classificadas
+        records = sorted(records, key=lambda x: x["votes_helpful"], reverse=True)
+            
+        result = {"items": records, "count": len(records)}
+        
+        # Salva o cache
+        with open(cache_path, "w", encoding="utf-8") as f:
+            json.dump(result, f, ensure_ascii=False)
+            
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao ler CSV: {str(e)}")
 
 
 @app.get("/graph/mock-data")

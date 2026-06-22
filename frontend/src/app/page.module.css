@@ -1,28 +1,17 @@
 .page {
-  --background: #1b2838;
-  --foreground: #1b2838;
+  --background: #171a21; /* Fundo global clássico da Steam */
+  --foreground: #c7d5e0;
 
-  --text-primary: #000;
+  --text-primary: #ffffff;
   --text-secondary: #c7d5e0;
-    --white: #ffffff;
-    --primary: #66c0f4;
-    --gray: #8F98A0;
-    --light-gray: #C7D5E0;
-    --dark-blue-2: #3B4B59;
-    --background-blue: #102033;
-    --dark-blue: #132943;
-
-/* branco #ffffff
-azul escuro header e fundo #1b2838 
-azul escuro body, 
-cinza
-azul claro primário #66c0f4
-azul cinza botão #364657
-cinza escuro fundo
- */
-
-
-    
+  --white: #ffffff;
+  --primary: #66c0f4;
+  --gray: #8F98A0;
+  --light-gray: #C7D5E0;
+  --dark-blue-2: #2a475e;
+  --background-blue: #1b2838;
+  --dark-blue: #1b2838;
+  
   --button-primary-hover: #383838;
   --button-secondary-hover: #f2f2f2;
   --button-secondary-border: #ebebeb;
@@ -31,34 +20,60 @@ cinza escuro fundo
   flex: 1;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-family: var(--font-geist-sans);
+  justify-content: flex-start;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   background-color: var(--background);
+  min-height: 100vh;
 }
 
 .main {
   display: flex;
   flex: 1;
   width: 100%;
-  max-width: 920px;
+  max-width: 1200px; /* Alargado para caber 2 colunas confortavelmente */
   flex-direction: column;
-  align-items: flex-start;
-  /* justify-content: space-between; */
+  align-items: center;
   background-color: var(--background);
-  padding: 2rem ;
+  padding: 2rem 1rem;
+}
+
+/* Novo Grid do Dashboard */
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr 450px;
+  gap: 2rem;
+  width: 100%;
+  align-items: start;
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: sticky;
+  top: 2rem; /* Mantém o formulário/grafo visíveis no scroll */
 }
 
 /* Header */
 .header {
     display: flex;
     flex-direction: row;
-    background-color: var(--background-blue);
+    background-color: #171a21;
+    border-bottom: 1px solid #1b2838;
     width: 100%;
     padding: 1rem;
     gap: 2rem;
     align-items: center;
     font-weight: bold;
     justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 10;
 }
 
 .header div {
@@ -245,6 +260,9 @@ cinza escuro fundo
     color: var(--white);
     display: block;
     font-size: 1.4rem;
+    line-height: 1.2;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .resultSummary p {
@@ -314,11 +332,12 @@ cinza escuro fundo
 }
 
 .graphPanel {
-    border: 1px solid #1e293b;
+    background-color: #1b2838;
+    border: 1px solid #2d4356;
     border-radius: 8px;
-    margin-top: 40px;
     overflow: hidden;
     width: 100%;
+    min-height: 450px;
 }
 
 
@@ -374,17 +393,27 @@ cinza escuro fundo
     align-items: center;
 }
 
-.containerCategorias button {
-    padding: 1rem;
+.filterPill {
+    padding: 0.6rem 1.2rem;
     background-color: var(--dark-blue-2);
-    border: none;
-    font-weight:600;
+    border: 1px solid transparent;
+    border-radius: 20px;
+    font-weight: 600;
     color: var(--light-gray);
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.containerCategorias button:focus {
+.filterPill:hover {
+    background-color: #3b5a75;
+    transform: translateY(-1px);
+}
+
+.filterPillActive {
     background-color: var(--primary);
-    color: var(--background-blue);
+    color: #06111d;
+    border-color: var(--primary);
+    box-shadow: 0 4px 10px rgba(102, 192, 244, 0.3);
 }
 
 /* Reviews */
@@ -395,62 +424,101 @@ cinza escuro fundo
 }
 
 .ReviewCard {
-    background-color: #1c2f45;
+    background-color: #142131;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    border: 1px solid #1f354d;
     width: 100%;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
+.ReviewCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .ReviewCardHeader {
-    background-color: var(--background-blue);
+    background-color: #1b2838;
+    padding: 1rem 1.5rem;
     display: flex;
     flex-direction: row;
-    justify-content:space-between;
-    gap: 1rem;
+    align-items: center;
+    border-bottom: 1px solid #2d4356;
+    gap: 1.5rem;
 }
 
+.ReviewIconContainer {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background-color: #24354a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+/* CSS Filter para transformar o svg cinza/branco em vermelho */
+.iconDislike {
+    filter: invert(34%) sepia(87%) saturate(5833%) hue-rotate(345deg) brightness(97%) contrast(105%);
+}
 
-.ReviewCardHeader img {
-    width: 3rem;
-    background-color: var(--primary);
+.iconLike {
+    filter: invert(67%) sepia(50%) saturate(459%) hue-rotate(180deg) brightness(95%) contrast(93%);
 }
 
 .ReviewCardHeader div {
-    padding: .3rem;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.2rem;
     width: 100%;
 }
 
-.ReviewRecomendation {
+.ReviewRecomendationPos {
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
 
+.ReviewRecomendationNeg {
+    color: #ff4c4c;
+    font-weight: 800;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .ReviewId {
-    color: var(--primary);
-    font-size: .7rem;
-    font-weight: bold;
+    color: var(--gray);
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
-.ReviewMarcadores{
+.ReviewMarcadores {
     display: flex;
     flex-direction: row;
-    font-size: .8rem;
-    gap: .5rem;
-    color: var(--primary);
+    font-size: 0.75rem;
+    font-weight: bold;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
 }
 
-.ReviewMarcador{
-    background-color: var(--dark-blue);
-    padding: .3rem;
+.ReviewMarcador {
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    color: #06111d;
+    background-color: var(--gray);
 }
 
 .ReviewContent {
-    color: rgb(171, 170, 170);
-    padding: 1rem;
-    font-size: .9rem;
+    color: var(--light-gray);
+    padding: 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
 }
 
 
@@ -482,6 +550,16 @@ a.secondary {
   a.secondary:hover {
     background: var(--button-secondary-hover);
     border-color: transparent;
+  }
+}
+
+@media (max-width: 1024px) {
+  .gridContainer {
+    grid-template-columns: 1fr;
+  }
+  
+  .rightColumn {
+    position: static;
   }
 }
 

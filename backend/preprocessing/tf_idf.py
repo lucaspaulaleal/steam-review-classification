@@ -98,8 +98,9 @@ def calculate_tf_idf(documents):
             continue
 
         for token in unique_tokens:
-            # TF: importância local da palavra na review.
-            term_frequency = _count_token(tokens, token) / len(tokens)
+            # TF sublinear (amortecimento logarítmico): evita que repetições excessivas dominem o peso.
+            count = _count_token(tokens, token)
+            term_frequency = 1 + log(count)
 
             # DF: busca binária O(log V) em vez de varredura O(D).
             pos = binary_search_tuples(df_table, token)

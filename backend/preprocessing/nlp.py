@@ -39,7 +39,7 @@ def _initialize_nltk():
 
     _stop_words = set(stopwords.words('portuguese'))
     # Adicionando termos comuns que podem ser ruido, ou que o RSLP pode ter problemas
-    _stop_words.update(["é", "pra", "q", "ta", "pro", "tá", "aí", "ai"]) 
+    _stop_words.update(["é", "pra", "q", "ta", "pro", "tá", "aí", "ai", "jog", "jogo", "joguinho", "muit", "muito", "pouco", "pouc", "bom", "ruim", "ruin", "pq", "porque", "por", "que", "isso", "aquilo", "este", "esse", "apenas", "mas", "tbm", "tb", "tambem", "também", "sim", "nao", "não", "cara", "você", "vc", "ja", "já"])
     
     _stemmer = RSLPStemmer()
     _is_initialized = True
@@ -67,7 +67,7 @@ def clean_text(text: str) -> list[str]:
     # 3. Remoção de Stop-words e 4. Stemming (Lematização básica)
     processed_tokens = []
     for word in tokens:
-        if word not in _stop_words and len(word) > 2:
+        if word not in _stop_words and len(word) > 3:
             stemmed = _stemmer.stem(word)
             processed_tokens.append(stemmed)
 
