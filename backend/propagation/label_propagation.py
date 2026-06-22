@@ -246,26 +246,29 @@ def classify_reviews(graph, scores, top_words_count=5):
                 node_scores = score_values
                 break
 
-        # Normaliza node_scores para somar 1.0 para o Frontend (Confiança Relativa e Barras)
-        total_node = sum(v for c, v in node_scores)
-        if total_node > 0:
-            node_scores = [(c, v / total_node) for c, v in node_scores]
+        cmn_scores = []
+        for category, value in node_scores:
+            cmn_val = value / class_mass.get(category, 1.0)
+            cmn_scores.append((category, cmn_val))
+            
+        # Normaliza node_scores após CMN para somar 1.0 para o Frontend (Confiança Relativa e Barras)
+        total_cmn = sum(v for c, v in cmn_scores)
+        if total_cmn > 0:
+            node_scores = [(c, v / total_cmn) for c, v in cmn_scores]
+        else:
+            node_scores = cmn_scores
 
         best_category = "Outros"
-        best_adjusted_score = 0.0
         best_raw_score = 0.0
         for category, value in node_scores:
-            # A categoria final e a de maior score normalizado (adjusted_score)
-            adjusted_score = value / class_mass.get(category, 1.0)
-            if adjusted_score > best_adjusted_score:
+            if value > best_raw_score:
                 best_category = category
-                best_adjusted_score = adjusted_score
                 best_raw_score = value
 
         # 3. Descobrir as palavras que mais influenciaram
         top_words = []
         if best_category != "Outros":
-            all_words_influence = []
+            words_dict = {}
             
             for neighbor_idx, weight in graph.get_neighbors_by_idx(node_idx):
                 if graph.node_types[neighbor_idx] == "word":
@@ -287,7 +290,12 @@ def classify_reviews(graph, scores, top_words_count=5):
                     influence = weight * cat_score
                     if influence > 0:
                         word_clean = neighbor_label.replace("word:", "")
-                        all_words_influence.append([word_clean, influence])
+                        if word_clean in words_dict:
+                            words_dict[word_clean] += influence
+                        else:
+                            words_dict[word_clean] = influence
+            
+            all_words_influence = [[w, i] for w, i in words_dict.items()]
                         
             # Ordenar por influencia
             for i in range(len(all_words_influence)):

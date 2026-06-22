@@ -73,13 +73,12 @@ def build_tripartite_graph(documents, seed_groups, tf_idf_threshold=0.0, pmi_thr
 
 def mock_documents():
     #Reviews pequenas simulando o output já lematizado do NLP.
+    #Balanceado com 1 review por categoria para que o CMN não penalize desproporcionalmente.
     return [
-        ("R1", ["fps", "lag", "crash", "fps"]),
+        ("R1", ["fps", "lag", "crash", "trav"]),
         ("R2", ["textur", "grafic", "resoluca", "visual"]),
         ("R3", ["control", "gameplay", "divers", "jogabil"]),
         ("R4", ["histori", "enred", "personag", "narrativ"]),
-        ("R5", ["fps", "textur", "resoluca", "lag"]),
-        ("R6", ["histori", "control", "divers", "enred"]),
     ]
 
 
