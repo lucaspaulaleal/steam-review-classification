@@ -123,10 +123,10 @@ def test_tripartite_graph_contains_expected_layers_and_edges():
     graph = build_tripartite_graph(mock_documents(), mock_seed_groups())
 
     assert graph.get_node_type("R1") == "review"
-    assert graph.get_node_type("word:fps") == "word"
+    assert graph.get_node_type("word:fp") == "word"
     assert graph.get_node_type("Performance") == "category"
     assert len(graph.get_neighbors("R1")) > 0
-    assert ("Performance", 1.0) in graph.get_neighbors("word:fps")
+    assert ("Performance", 1.0) in graph.get_neighbors("word:fp")
 
 
 def test_label_propagation_classifies_mock_reviews():
@@ -140,7 +140,7 @@ def test_label_propagation_classifies_mock_reviews():
     r4 = _find_classification(classifications, "R4")
 
     assert r1[1] == "Performance"
-    assert r2[1] == "Graficos"
+    assert r2[1] == "Gráfico"
     assert r3[1] == "Gameplay"
     assert r4[1] == "Narrativa"
 
