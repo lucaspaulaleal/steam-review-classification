@@ -204,11 +204,12 @@ def label_propagation_with_history(graph, iterations=20, threshold=0.001, dampin
     return _scores_result(graph, scores), history
 
 
-def classify_reviews(graph, scores):
+def classify_reviews(graph, scores, top_words_count=5):
     """
     Retorna a melhor categoria para cada no de review aplicando Class Mass Normalization (CMN).
     Aplica a normalizacao pelas massas totais acumuladas nas reviews para evitar que 
     categorias superconectadas (hubs) dominem a classificacao.
+    Tambem retorna as principais palavras que influenciaram a decisao.
     """
     classifications = []
     
@@ -254,6 +255,40 @@ def classify_reviews(graph, scores):
                 best_category = category
                 best_score = adjusted_score
 
-        classifications.append((label, best_category, best_score, node_scores))
+        # 3. Descobrir as palavras que mais influenciaram
+        top_words = []
+        if best_category != "Outros":
+            for neighbor_idx, weight in graph.get_neighbors_by_idx(node_idx):
+                if graph.node_types[neighbor_idx] == "word":
+                    neighbor_label = graph.labels[neighbor_idx]
+                    
+                    # Recupera o score da palavra vizinha para a categoria vencedora
+                    n_scores = []
+                    for score_label, score_values in scores:
+                        if score_label == neighbor_label:
+                            n_scores = score_values
+                            break
+                            
+                    cat_score = 0.0
+                    for c, v in n_scores:
+                        if c == best_category:
+                            cat_score = v
+                            break
+                            
+                    influence = weight * cat_score
+                    if influence > 0:
+                        word_clean = neighbor_label.replace("word:", "")
+                        top_words.append((word_clean, influence))
+                        
+            # Ordenar por influencia e pegar os top N
+            # Sort simple in place to respect limits
+            for i in range(len(top_words)):
+                for j in range(i + 1, len(top_words)):
+                    if top_words[j][1] > top_words[i][1]:
+                        top_words[i], top_words[j] = top_words[j], top_words[i]
+            
+            top_words = top_words[:top_words_count]
+
+        classifications.append((label, best_category, best_score, node_scores, top_words))
 
     return classifications

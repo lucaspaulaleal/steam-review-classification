@@ -66,12 +66,13 @@ def mock_classifications(
     scores = label_propagation(graph, iterations=iterations, threshold=0.0001, damping_factor=damping_factor)
     classifications = classify_reviews(graph, scores)
     response = []
-    for review_label, category, score, category_scores in classifications:
+    for review_label, category, score, category_scores, top_words in classifications:
         response.append(
             {
                 "review": review_label,
                 "category": category,
                 "score": score,
+                "top_words": [{"word": w, "influence": round(inf, 6)} for w, inf in top_words],
                 "scores": [
                     {"category": score_label, "score": score_value}
                     for score_label, score_value in category_scores
@@ -132,6 +133,7 @@ def get_dataset_reviews(limit: int = 5):
                 
             cls = classify_review_text(text)
             category = cls["category"] if cls else "Outros"
+            top_words = cls["top_words"] if cls and "top_words" in cls else []
             
             # Normalização de nomenclatura
             if "grafic" in category.lower() or "gráfic" in category.lower():
@@ -146,6 +148,7 @@ def get_dataset_reviews(limit: int = 5):
                 "recommended": row['recommended'],
                 "votes_helpful": row['votes_helpful'],
                 "category": category,
+                "top_words": top_words,
             })
             
             total_collected = sum(len(v) for v in buckets.values())
