@@ -56,7 +56,7 @@ def test_realtime_classification_endpoint_returns_200_and_scores():
 
 
 def test_realtime_classification_endpoint_rejects_empty_content():
-    response = client.post("/reviews/classify", json={"text": "!!! 123 !!!"})
+    response = client.post("/reviews/classify", json={"text": "!!! !!!"})
 
     assert response.status_code == 400
 

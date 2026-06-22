@@ -36,14 +36,14 @@ def _merge_tokens(primary_tokens, extra_tokens):
 def _simple_review_tokens(text):
     normalized = ""
     for char in text.lower():
-        if char.isalpha():
+        if char.isalnum():
             normalized += char
         else:
             normalized += " "
 
     tokens = []
     for token in normalized.split():
-        if len(token) > 2 and not _find_token(tokens, token):
+        if len(token) > 1 and not _find_token(tokens, token):
             tokens.append(token)
     return tokens
 
@@ -75,9 +75,6 @@ def _response_from_classification(classification, tokens):
 def classify_review_text(text, tf_idf_threshold=0.0, pmi_threshold=0.0, damping_factor=0.85):
     """
     Classifica uma review digitada em tempo real.
-
-    A review e adicionada apenas ao grafo construido para esta chamada, mantendo
-    o dataset mockado original intacto.
     """
     nlp_tokens = _nlp_review_tokens(text)
     simple_tokens = _simple_review_tokens(text)
@@ -85,6 +82,21 @@ def classify_review_text(text, tf_idf_threshold=0.0, pmi_threshold=0.0, damping_
 
     if len(tokens) == 0:
         return None
+
+    # Mapeamento reverso para não mostrar palavras feias (stems) no Frontend
+    stem_map = {}
+    import re
+    raw_words = re.findall(r'[a-z0-9áéíóúâêîôûãõç]+', text.lower())
+    try:
+        from nltk.stem import RSLPStemmer
+        stemmer = RSLPStemmer()
+        for w in raw_words:
+            if len(w) > 1:
+                st = stemmer.stem(w)
+                if st not in stem_map or len(w) < len(stem_map[st]):
+                    stem_map[st] = w
+    except:
+        pass
 
     documents = mock_documents() + [(REALTIME_REVIEW_LABEL, tokens)]
     graph = build_tripartite_graph(documents, mock_seed_groups(), tf_idf_threshold=tf_idf_threshold, pmi_threshold=pmi_threshold)
@@ -95,4 +107,11 @@ def classify_review_text(text, tf_idf_threshold=0.0, pmi_threshold=0.0, damping_
     if classification is None:
         return None
 
-    return _response_from_classification(classification, tokens)
+    review_label, category, score, category_scores, top_words = classification
+    mapped_top_words = []
+    for w, inf in top_words:
+        mapped_top_words.append((stem_map.get(w, w), inf))
+        
+    mapped_classification = (review_label, category, score, category_scores, mapped_top_words)
+
+    return _response_from_classification(mapped_classification, tokens)

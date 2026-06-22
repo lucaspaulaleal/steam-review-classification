@@ -246,6 +246,11 @@ def classify_reviews(graph, scores, top_words_count=5):
                 node_scores = score_values
                 break
 
+        # Normaliza node_scores para somar 1.0 para o Frontend (Confiança Relativa e Barras)
+        total_node = sum(v for c, v in node_scores)
+        if total_node > 0:
+            node_scores = [(c, v / total_node) for c, v in node_scores]
+
         best_category = "Outros"
         best_adjusted_score = 0.0
         best_raw_score = 0.0

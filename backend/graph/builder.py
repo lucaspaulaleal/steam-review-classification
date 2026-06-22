@@ -86,8 +86,8 @@ def mock_documents():
 def mock_seed_groups():
     #Seeds massivamente expandidas com dezenas de gírias gamers e stems do RSLP
     return [
-        ("Performance", ["fps", "lag", "crash", "stuttering", "trav", "otimiz", "desempenh", "bug", "queda", "frame", "gargal", "pesad", "lev", "roda", "rodou", "liso", "pc", "rtx", "gtx", "processador", "placa", "memoria", "ram", "cpu", "gpu"]),
-        ("Graficos", ["textur", "resoluca", "grafic", "visual", "lind", "fei", "beleza", "art", "arte", "sombra", "iluminaca", "raytracing", "paisag", "cenari", "realist", "feio", "bonit", "maravilh"]),
-        ("Gameplay", ["control", "gameplay", "divers", "jogabil", "mecani", "jogar", "tiro", "dirigir", "missa", "combat", "loot", "skill", "habilidad", "farm", "grind", "fisica", "moviment", "pul", "tirotei", "arma", "carr", "chef", "boss", "fase", "level", "dificuld"]),
+        ("Performance", ["fps", "lag", "crash", "stuttering", "trav", "otimiz", "desempenh", "bug", "queda", "frame", "gargal", "pesad", "lev", "roda", "rodou", "liso", "pc", "rtx", "gtx", "processador", "placa", "memoria", "ram", "cpu", "gpu", "engin"]),
+        ("Graficos", ["textur", "resoluca", "grafic", "visual", "lind", "fei", "beleza", "sombra", "iluminaca", "raytracing", "paisag", "cenari", "realist", "feio", "maravilh", "4k"]),
+        ("Gameplay", ["control", "gameplay", "divers", "jogabil", "mecani", "mecan", "jogar", "tiro", "dirigir", "missa", "combat", "loot", "skill", "habilidad", "farm", "grind", "fisica", "moviment", "pul", "tirotei", "arma", "carr", "chef", "boss", "fase", "level", "dificuld", "fluid", "respond"]),
         ("Narrativa", ["histori", "enred", "personag", "narrativ", "campanh", "fina", "lore", "dialog", "dublag", "legend", "tradu", "final", "emociona", "vila", "heroi", "plot", "twist", "roteir", "escrev", "leitur", "livr"]),
     ]

@@ -39,8 +39,7 @@ def _initialize_nltk():
 
     _stop_words = set(stopwords.words('portuguese'))
     # Adicionando termos comuns que podem ser ruido, ou que o RSLP pode ter problemas
-    _stop_words.update(["é", "pra", "q", "ta", "pro", "tá", "aí", "ai", "jog", "jogo", "joguinho", "muit", "muito", "pouco", "pouc", "bom", "ruim", "ruin", "pq", "porque", "por", "que", "isso", "aquilo", "este", "esse", "apenas", "mas", "tbm", "tb", "tambem", "também", "sim", "nao", "não", "cara", "você", "vc", "ja", "já"])
-    
+    _stop_words.update(["é", "pra", "q", "ta", "pro", "tá", "aí", "ai", "jog", "jogo", "joguinho", "muit", "muito", "pouco", "pouc", "bom", "ruim", "ruin", "pq", "porque", "por", "que", "isso", "aquilo", "este", "esse", "apenas", "mas", "tbm", "tb", "tambem", "também", "sim", "nao", "não", "cara", "você", "vc", "ja", "já", "legal", "com", "cada", "chor", "chorei", "acert", "bonit", "arte", "art", "bonito", "tudo", "super", "nunca", "terrivel", "desejar"])
     _stemmer = RSLPStemmer()
     _is_initialized = True
 
@@ -57,9 +56,9 @@ def clean_text(text: str) -> list[str]:
     _initialize_nltk()
 
     # 1. Lowercase e remoção de pontuação/números usando regex
-    # Mantém apenas letras minúsculas (incluindo acentuadas).
+    # Mantém letras minúsculas (incluindo acentuadas) e números (para manter 4k, etc).
     text = text.lower()
-    text = re.sub(r'[^a-záéíóúâêîôûãõç]+', ' ', text)
+    text = re.sub(r'[^a-z0-9áéíóúâêîôûãõç]+', ' ', text)
 
     # 2. Tokenização
     tokens = word_tokenize(text, language='portuguese')
@@ -67,7 +66,7 @@ def clean_text(text: str) -> list[str]:
     # 3. Remoção de Stop-words e 4. Stemming (Lematização básica)
     processed_tokens = []
     for word in tokens:
-        if word not in _stop_words and len(word) > 3:
+        if word not in _stop_words and len(word) > 1:
             stemmed = _stemmer.stem(word)
             processed_tokens.append(stemmed)
 
