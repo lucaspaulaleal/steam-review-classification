@@ -122,9 +122,13 @@ export default function Home() {
 
             <div className={styles.analiseGeral}>
               <div className={styles.containerGeral}>
-                <p>ANÁLISES DA COMUNIDADE (Kaggle)</p>
-                <h2 className={styles.positiveAnalises}>Ligeiramente Positivas</h2>
-                <p>2.800 análises processadas</p>
+                    <p>ANÁLISES DA COMUNIDADE (Kaggle)</p>
+                    <h2 className={styles.positiveAnalises}>Ligeiramente Positivas</h2>
+                    <p>
+                        {datasetReviews.length > 0 
+                        ? `${datasetReviews.length.toLocaleString("pt-BR")} análises processadas` 
+                        : "Carregando análises..."}
+                   </p>
               </div>
               <div className={styles.containerGeralMenor}>
                 <div className={styles.containerGeral}>
