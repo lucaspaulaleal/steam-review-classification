@@ -5,12 +5,18 @@ import Image from "next/image";
 import SteamGraph from "../components/steam-graph";
 import styles from "./page.module.css";
 
+type TopWord = {
+  word: string;
+  influence: number;
+};
+
 type DatasetReview = {
   review_id: number;
   review: string;
   recommended: boolean;
   votes_helpful: number;
   category: string;
+  top_words?: TopWord[];
 };
 
 type CategoryScore = {
@@ -23,6 +29,7 @@ type ClassificationResult = {
   category: string;
   score: number;
   tokens: string[];
+  top_words?: TopWord[];
   scores: CategoryScore[];
 };
 
@@ -208,6 +215,11 @@ export default function Home() {
                                 <p className={`${styles.ReviewMarcador} ${categoryClass(rev.category)}`}>
                                     {rev.category}
                                 </p>
+                                {rev.top_words?.map((tw, idx) => (
+                                    <span key={idx} className={styles.topWordTag}>
+                                        {tw.word} ({(tw.influence * 100).toFixed(0)}%)
+                                    </span>
+                                ))}
                             </div>
     
                         </div>
@@ -284,9 +296,20 @@ export default function Home() {
                   </div>
 
                   <div className={styles.tokenList}>
-                    {result.tokens.slice(0, 12).map((token) => (
-                      <span key={token}>{token}</span>
-                    ))}
+                    {result.top_words && result.top_words.length > 0 ? (
+                        <>
+                          <p className={styles.sectionEyebrow} style={{margin: '10px 0'}}>Palavras Determinantes:</p>
+                          {result.top_words.map((tw) => (
+                            <span key={tw.word} className={styles.topWordTagActive}>
+                              {tw.word} ({(tw.influence * 100).toFixed(1)}%)
+                            </span>
+                          ))}
+                        </>
+                    ) : (
+                        result.tokens.slice(0, 12).map((token) => (
+                          <span key={token}>{token}</span>
+                        ))
+                    )}
                   </div>
                 </div>
               ) : null}

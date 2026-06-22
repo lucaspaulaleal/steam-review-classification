@@ -58,12 +58,13 @@ def _nlp_review_tokens(text):
 
 
 def _response_from_classification(classification, tokens):
-    review_label, category, score, category_scores = classification
+    review_label, category, score, category_scores, top_words = classification
     return {
         "review": review_label,
         "category": category,
         "score": score,
         "tokens": tokens,
+        "top_words": [{"word": w, "influence": round(inf, 6)} for w, inf in top_words],
         "scores": [
             {"category": score_label, "score": score_value}
             for score_label, score_value in category_scores

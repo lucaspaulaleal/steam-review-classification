@@ -522,6 +522,23 @@
     text-align: center;
 }
 
+.topWordTag {
+    padding: 0.4rem .8rem;
+    border-radius: 4px;
+    color: var(--light-gray);
+    background-color: #24354a;
+    text-align: center;
+    border: 1px solid #2d4356;
+}
+
+.topWordTagActive {
+    padding: 0.4rem .8rem;
+    border-radius: 4px;
+    color: #06111d;
+    background-color: #66c0f4;
+    text-align: center;
+}
+
 .ReviewContent {
     color: var(--light-gray);
     padding: 1.5rem;
