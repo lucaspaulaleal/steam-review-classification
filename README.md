@@ -38,8 +38,17 @@ A propagação da informação flui com base em pesos matematicamente definidos:
 - **Arestas $P \leftrightarrow P$ (Palavra-Palavra)**: Ponderadas pelo índice **NPMI** (Normalized Pointwise Mutual Information), capturando as probabilidades conjuntas de coocorrência de termos em toda a base de dados.
 - **Arestas $P \leftrightarrow C$ (Palavra-Categoria)**: Sementes (seeds) inicialmente polarizadas com peso máximo conectando palavras-chave óbvias (ex: "fps" $\rightarrow$ "Performance").
 
-### 🔮 Inferência em Tempo Real
-A API possui um módulo de classificação em *Real-Time* (`/backend/classification`) que injeta dinamicamente textos não vistos previamente pelo modelo no Grafo, extrai seus radicais via RSLPStemmer, cálcula similaridade contra as `seeds` estendidas e retorna a propagação probabilística instantaneamente.
+### 🧠 Refinamentos de Processamento de Linguagem Natural (NLP)
+Para garantir que o modelo não seja poluído por "lixo eletrônico" ou ambiguidades, o pipeline de NLP foi massivamente aprimorado com as seguintes defesas:
+- **Filtro de Idioma (RegEx)**: Descarte de análises preenchidas majoritariamente com caracteres em inglês, preservando o foco no léxico PT-BR.
+- **Filtro Anti-Ruído (Stop-words)**: Além da biblioteca do NLTK, adicionamos mais de 40 stop-words personalizadas e informais do universo gamer brasileiro ("tbm", "pra", "joguinho").
+- **Vocabulário Direcionado (Seeds Expandidas)**: As "Sementes" do Grafo foram expandidas com dezenas de gírias e jargões da comunidade (ex: "stuttering", "fps", "lag", "raytracing", "grind", "loot", "plot", "dublag").
+- **Sublinear TF Scaling**: Amortecimento logarítmico aplicado à frequência de termos (`1 + log(tf)`) para evitar que repetições exaustivas na mesma review (ex: "lag lag lag...") distorçam o Grafo.
+
+### 🔮 Inferência em Tempo Real e Alta Performance
+A API possui um módulo de classificação em *Real-Time* (`/backend/classification`) que injeta dinamicamente textos não vistos previamente pelo modelo no Grafo, extrai seus radicais via RSLPStemmer, calcula similaridade contra as `seeds` estendidas e retorna a propagação probabilística instantaneamente.
+
+Para viabilizar a fluidez na interface visual, os cálculos da propagação do dataset completo de testes (~200+ reviews ativas balanceadas) ficam cacheados nativamente (`steam_reviews_cache.json`), garantindo renderização ultra-rápida na exploração de dados do Frontend (Next.js).
 
 ---
 
