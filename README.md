@@ -35,8 +35,11 @@ O texto das avaliações é estruturado matematicamente em uma rede complexa for
 A propagação da informação flui com base em pesos matematicamente definidos:
 
 - **Arestas $R \leftrightarrow P$ (Review-Palavra)**: Ponderadas utilizando **TF-IDF** (Term Frequency - Inverse Document Frequency), indicando a relevância estatística da palavra para o documento específico.
-- **Arestas $P \leftrightarrow P$ (Palavra-Palavra)**: Ponderadas pelo índice **PMI** (Pointwise Mutual Information), capturando as probabilidades conjuntas de coocorrência de termos em toda a base de dados.
+- **Arestas $P \leftrightarrow P$ (Palavra-Palavra)**: Ponderadas pelo índice **NPMI** (Normalized Pointwise Mutual Information), capturando as probabilidades conjuntas de coocorrência de termos em toda a base de dados.
 - **Arestas $P \leftrightarrow C$ (Palavra-Categoria)**: Sementes (seeds) inicialmente polarizadas com peso máximo conectando palavras-chave óbvias (ex: "fps" $\rightarrow$ "Performance").
+
+### 🔮 Inferência em Tempo Real
+A API possui um módulo de classificação em *Real-Time* (`/backend/classification`) que injeta dinamicamente textos não vistos previamente pelo modelo no Grafo, extrai seus radicais via RSLPStemmer, cálcula similaridade contra as `seeds` estendidas e retorna a propagação probabilística instantaneamente.
 
 ---
 
@@ -61,12 +64,12 @@ A aplicação é dividida em três frentes e totalmente conteinerizada para gara
 ```text
 /
 ├── backend/                   # Lógica de ML e API
-│   ├── api/                   # Controladores REST FastAPI
+│   ├── api/                   # Controladores REST FastAPI (main.py)
+│   ├── classification/        # Inferência de NLP em Tempo Real
 │   ├── graph/                 # Estrutura do Grafo em Listas e Builder
-│   ├── preprocessing/         # NLP e TF-IDF manual
-│   ├── propagation/           # Label Propagation e PMI manual
-│   ├── tests/                 # Testes unitários (PyTest)
-│   └── main.py                # Ponto de inicialização
+│   ├── preprocessing/         # NLP, Sublinear TF-IDF manual
+│   ├── propagation/           # Label Propagation e NPMI manual
+│   └── tests/                 # Testes unitários (PyTest)
 ├── frontend/                  # Interface Visual (Next.js)
 ├── infra/                     # Configurações de Deploy (Vercel/Render)
 ├── scripts/                   # Automação de extração do Kaggle

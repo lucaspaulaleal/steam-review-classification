@@ -79,14 +79,14 @@ def build_tripartite_graph(documents, seed_groups):
 
 
 def mock_documents():
-    #Reviews pequenas para validar o fluxo antes do dataset real.
+    #Reviews pequenas simulando o output já lematizado do NLP.
     return [
         ("R1", ["fps", "lag", "crash", "fps"]),
-        ("R2", ["textura", "grafico", "resolucao", "visual"]),
-        ("R3", ["controles", "gameplay", "diversao", "jogabilidade"]),
-        ("R4", ["historia", "enredo", "personagem", "narrativa"]),
-        ("R5", ["fps", "textura", "resolucao", "lag"]),
-        ("R6", ["historia", "controles", "diversao", "enredo"]),
+        ("R2", ["textur", "grafic", "resoluca", "visual"]),
+        ("R3", ["control", "gameplay", "divers", "jogabil"]),
+        ("R4", ["histori", "enred", "personag", "narrativ"]),
+        ("R5", ["fps", "textur", "resoluca", "lag"]),
+        ("R6", ["histori", "control", "divers", "enred"]),
     ]
 
 

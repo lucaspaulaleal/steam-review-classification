@@ -137,14 +137,14 @@
 
 /* [project]/src/app/globals.css [app-client] (css) */
 :root {
-  --background: #fff;
-  --foreground: #171717;
+  --background: #171a21;
+  --foreground: #c7d5e0;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #171a21;
+    --foreground: #c7d5e0;
   }
 }
 

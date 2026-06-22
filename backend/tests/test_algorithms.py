@@ -59,8 +59,9 @@ def test_tf_idf_matches_expected_smoothed_values():
     r1_terms = _find_tuple_by_first(result, "R1")[1]
     r2_terms = _find_tuple_by_first(result, "R2")[1]
 
-    expected_fps_r1 = (2 / 3) * (log((1 + 2) / (1 + 2)) + 1)
-    expected_lag_r1 = (1 / 3) * (log((1 + 2) / (1 + 1)) + 1)
+    # Sublinear TF = 1 + log(count). Neste caso, count(fps) = 2. count(lag) = 1.
+    expected_fps_r1 = (1 + log(2)) * (log((1 + 2) / (1 + 2)) + 1)
+    expected_lag_r1 = (1 + log(1)) * (log((1 + 2) / (1 + 1)) + 1)
 
     assert _find_tuple_by_first(r1_terms, "fps")[1] == pytest.approx(expected_fps_r1)
     assert _find_tuple_by_first(r1_terms, "lag")[1] == pytest.approx(expected_lag_r1)
@@ -96,9 +97,12 @@ def test_pmi_matches_expected_value_and_ignores_duplicate_tokens_in_review():
     result = calculate_pmi(documents)
     fps_lag = _find_pair(result, "fps", "lag")
 
-    expected_pmi = log((1 / 3) / ((2 / 3) * (1 / 3)))
+    # NPMI = PMI / -log(p_pair)
+    pmi = log((1 / 3) / ((2 / 3) * (1 / 3)))
+    expected_npmi = pmi / -log(1 / 3)
+    
     assert fps_lag is not None
-    assert fps_lag[2] == pytest.approx(expected_pmi)
+    assert fps_lag[2] == pytest.approx(expected_npmi)
 
 
 def test_pmi_returns_empty_for_empty_corpus_and_non_positive_pairs():
@@ -148,3 +152,29 @@ def test_label_propagation_with_history_tracks_convergence():
     assert len(scores) == graph.size()
     assert len(history) > 0
     assert history[-1][1] < history[0][1]
+
+
+def test_label_propagation_returns_outros_when_no_intersection():
+    # Testa se a ausência de cruzamento resulta em 'Outros' (novo bugfix)
+    documents = [("R_ISOLADA", ["palavra_aleatoria_que_nao_tem_seed"])]
+    graph = build_tripartite_graph(documents, mock_seed_groups())
+    scores = label_propagation(graph, iterations=10)
+    classifications = classify_reviews(graph, scores)
+    
+    r_isolada = _find_classification(classifications, "R_ISOLADA")
+    assert r_isolada[1] == "Outros"
+    assert r_isolada[2] == 0.0
+
+
+def test_npmi_bounds():
+    # NPMI deve ser rigorosamente contido em [-1, 1], e como só guardamos > 0, deve ser (0, 1]
+    documents = [
+        ("R1", ["a", "b"]),
+        ("R2", ["a", "b"]),
+        ("R3", ["c", "d"])
+    ]
+    result = calculate_pmi(documents)
+    ab_pair = _find_pair(result, "a", "b")
+    
+    assert ab_pair is not None
+    assert 0 < ab_pair[2] <= 1.0

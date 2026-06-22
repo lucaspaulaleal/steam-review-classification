@@ -1,3 +1,105 @@
 {"timestamp":"00:00:00.539","source":"Server","level":"LOG","message":""}
 {"timestamp":"00:01:37.736","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
 {"timestamp":"00:01:43.868","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:04:39.717","source":"Server","level":"LOG","message":"✓ Compiled in 369ms"}
+{"timestamp":"00:05:44.262","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:07:58.368","source":"Server","level":"LOG","message":"✓ Compiled in 532ms"}
+{"timestamp":"00:07:58.786","source":"Server","level":"ERROR","message":"⨯ ReferenceError: React is not defined"}
+{"timestamp":"00:07:58.928","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:07:58.983","source":"Browser","level":"ERROR","message":"uncaughtError: ReferenceError: React is not defined"}
+{"timestamp":"00:07:58.995","source":"Server","level":"ERROR","message":"[browser] \"Uncaught ReferenceError: React is not defined\\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:42:49)\\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:719:165)\""}
+{"timestamp":"00:07:58.995","source":"Browser","level":"ERROR","message":"Uncaught ReferenceError: React is not defined\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:42:49)\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:719:165)"}
+{"timestamp":"00:08:34.599","source":"Server","level":"WARN","message":"⚠ Fast Refresh had to perform a full reload due to a runtime error."}
+{"timestamp":"00:08:34.599","source":"Server","level":"WARN","message":"⚠ Fast Refresh had to perform a full reload when ./src/app/page.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload"}
+{"timestamp":"00:08:34.599","source":"Server","level":"WARN","message":"⚠ Fast Refresh had to perform a full reload due to a runtime error."}
+{"timestamp":"00:08:35.095","source":"Server","level":"ERROR","message":"⨯ ReferenceError: React is not defined"}
+{"timestamp":"00:08:35.115","source":"Server","level":"LOG","message":"✓ Compiled in 118ms"}
+{"timestamp":"00:08:35.478","source":"Server","level":"ERROR","message":"⨯ ReferenceError: React is not defined"}
+{"timestamp":"00:08:35.612","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:08:36.468","source":"Browser","level":"ERROR","message":"uncaughtError: ReferenceError: React is not defined"}
+{"timestamp":"00:08:48.746","source":"Server","level":"WARN","message":"⚠ Fast Refresh had to perform a full reload due to a runtime error."}
+{"timestamp":"00:08:49.293","source":"Server","level":"ERROR","message":"⨯ ReferenceError: React is not defined"}
+{"timestamp":"00:08:49.310","source":"Server","level":"LOG","message":"✓ Compiled in 6ms"}
+{"timestamp":"00:08:49.424","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:08:50.466","source":"Browser","level":"ERROR","message":"uncaughtError: ReferenceError: React is not defined"}
+{"timestamp":"00:09:02.748","source":"Server","level":"WARN","message":"⚠ Fast Refresh had to perform a full reload due to a runtime error."}
+{"timestamp":"00:09:03.115","source":"Server","level":"ERROR","message":"⨯ ReferenceError: React is not defined"}
+{"timestamp":"00:09:03.136","source":"Server","level":"LOG","message":"✓ Compiled in 6ms"}
+{"timestamp":"00:09:03.248","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:09:03.466","source":"Browser","level":"ERROR","message":"uncaughtError: ReferenceError: React is not defined"}
+{"timestamp":"00:09:04.557","source":"Server","level":"ERROR","message":"[browser] \"Uncaught ReferenceError: React is not defined\\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:42:49)\\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:722:165)\""}
+{"timestamp":"00:09:04.557","source":"Browser","level":"ERROR","message":"Uncaught ReferenceError: React is not defined\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:42:49)\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:722:165)"}
+{"timestamp":"00:09:11.464","source":"Server","level":"WARN","message":"⚠ Fast Refresh had to perform a full reload due to a runtime error."}
+{"timestamp":"00:09:11.479","source":"Browser","level":"ERROR","message":"unhandledRejection: Error: No link element found for chunk /_next/static/chunks/src_app_page_module_0cxh65o.css"}
+{"timestamp":"00:09:11.716","source":"Server","level":"ERROR","message":"⨯ ReferenceError: React is not defined"}
+{"timestamp":"00:09:11.728","source":"Server","level":"LOG","message":"✓ Compiled in 5ms"}
+{"timestamp":"00:09:11.729","source":"Server","level":"ERROR","message":"[browser] \"⨯ unhandledRejection: Error: No link element found for chunk /_next/static/chunks/src_app_page_module_0cxh65o.css\\n    at new Promise (<anonymous>)\""}
+{"timestamp":"00:09:11.729","source":"Browser","level":"ERROR","message":"⨯ unhandledRejection: Error: No link element found for chunk /_next/static/chunks/src_app_page_module_0cxh65o.css\n    at new Promise (<anonymous>)"}
+{"timestamp":"00:09:11.818","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:09:11.846","source":"Server","level":"ERROR","message":"[browser] \"Uncaught ReferenceError: React is not defined\\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:42:49)\\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:722:165)\""}
+{"timestamp":"00:09:11.846","source":"Browser","level":"ERROR","message":"Uncaught ReferenceError: React is not defined\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:42:49)\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:722:165)"}
+{"timestamp":"00:09:11.846","source":"Browser","level":"ERROR","message":"uncaughtError: ReferenceError: React is not defined"}
+{"timestamp":"00:10:08.315","source":"Server","level":"ERROR","message":"⨯ ReferenceError: React is not defined"}
+{"timestamp":"00:10:08.420","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:10:08.464","source":"Browser","level":"ERROR","message":"uncaughtError: ReferenceError: React is not defined"}
+{"timestamp":"00:10:08.464","source":"Server","level":"ERROR","message":"[browser] \"Uncaught ReferenceError: React is not defined\\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:42:49)\\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:722:165)\""}
+{"timestamp":"00:10:08.465","source":"Browser","level":"ERROR","message":"Uncaught ReferenceError: React is not defined\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:42:49)\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:722:165)"}
+{"timestamp":"00:10:23.334","source":"Server","level":"ERROR","message":"⨯ ReferenceError: React is not defined"}
+{"timestamp":"00:10:23.455","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:10:23.489","source":"Server","level":"ERROR","message":"[browser] \"Uncaught ReferenceError: React is not defined\\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:42:49)\\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:722:165)\""}
+{"timestamp":"00:10:23.489","source":"Browser","level":"ERROR","message":"Uncaught ReferenceError: React is not defined\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:42:49)\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:722:165)"}
+{"timestamp":"00:10:23.490","source":"Browser","level":"ERROR","message":"uncaughtError: ReferenceError: React is not defined"}
+{"timestamp":"00:10:25.259","source":"Server","level":"ERROR","message":"⨯ ReferenceError: React is not defined"}
+{"timestamp":"00:10:25.376","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:10:25.424","source":"Browser","level":"ERROR","message":"uncaughtError: ReferenceError: React is not defined"}
+{"timestamp":"00:10:25.428","source":"Server","level":"ERROR","message":"[browser] \"Uncaught ReferenceError: React is not defined\\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:42:49)\\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:722:165)\""}
+{"timestamp":"00:10:25.429","source":"Browser","level":"ERROR","message":"Uncaught ReferenceError: React is not defined\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:42:49)\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:722:165)"}
+{"timestamp":"00:10:43.608","source":"Server","level":"ERROR","message":"⨯ ReferenceError: React is not defined"}
+{"timestamp":"00:10:43.805","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:10:43.880","source":"Browser","level":"ERROR","message":"uncaughtError: ReferenceError: React is not defined"}
+{"timestamp":"00:10:43.880","source":"Server","level":"ERROR","message":"[browser] \"Uncaught ReferenceError: React is not defined\\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:42:49)\\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:722:165)\""}
+{"timestamp":"00:10:43.880","source":"Browser","level":"ERROR","message":"Uncaught ReferenceError: React is not defined\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:42:49)\n    at module evaluation (file://C:/Users/pedrohpsantos/Documents/steam-review-classification/frontend/.next/dev/static/chunks/src_00o5una._.js:722:165)"}
+{"timestamp":"00:11:54.479","source":"Server","level":"WARN","message":"⚠ Fast Refresh had to perform a full reload due to a runtime error."}
+{"timestamp":"00:11:54.480","source":"Server","level":"WARN","message":"⚠ Fast Refresh had to perform a full reload when ./src/components/steam-graph.jsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload"}
+{"timestamp":"00:11:54.480","source":"Server","level":"WARN","message":"⚠ Fast Refresh had to perform a full reload due to a runtime error."}
+{"timestamp":"00:11:54.746","source":"Server","level":"LOG","message":"✓ Compiled in 729ms"}
+{"timestamp":"00:11:54.938","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:14:08.791","source":"Server","level":"LOG","message":"✓ Compiled in 536ms"}
+{"timestamp":"00:14:38.854","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:16:55.446","source":"Server","level":"LOG","message":"✓ Compiled in 280ms"}
+{"timestamp":"00:17:58.653","source":"Server","level":"LOG","message":"✓ Compiled in 272ms"}
+{"timestamp":"00:18:32.194","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:19:44.647","source":"Server","level":"LOG","message":"✓ Compiled in 204ms"}
+{"timestamp":"00:20:05.057","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:25:07.206","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:25:10.307","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:26:55.816","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:28:24.711","source":"Server","level":"LOG","message":"✓ Compiled in 21ms"}
+{"timestamp":"00:28:34.126","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:28:55.863","source":"Server","level":"LOG","message":"✓ Compiled in 122ms"}
+{"timestamp":"00:29:02.520","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:29:50.115","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:31:54.714","source":"Server","level":"LOG","message":"✓ Compiled in 160ms"}
+{"timestamp":"00:34:39.535","source":"Server","level":"LOG","message":"✓ Compiled in 160ms"}
+{"timestamp":"00:34:39.551","source":"Browser","level":"WARN","message":"Image with src \"http://localhost:3000/dislike.svg\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."}
+{"timestamp":"00:34:39.552","source":"Browser","level":"WARN","message":"Image with src \"http://localhost:3000/like.svg\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."}
+{"timestamp":"00:34:39.566","source":"Server","level":"WARN","message":"[browser] \"Image with src \\\"http://localhost:3000/dislike.svg\\\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \\\"auto\\\"' or 'height: \\\"auto\\\"' to maintain the aspect ratio.\""}
+{"timestamp":"00:34:39.566","source":"Browser","level":"WARN","message":"Image with src \"http://localhost:3000/dislike.svg\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."}
+{"timestamp":"00:34:39.567","source":"Server","level":"WARN","message":"[browser] \"Image with src \\\"http://localhost:3000/like.svg\\\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \\\"auto\\\"' or 'height: \\\"auto\\\"' to maintain the aspect ratio.\""}
+{"timestamp":"00:34:39.567","source":"Browser","level":"WARN","message":"Image with src \"http://localhost:3000/like.svg\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."}
+{"timestamp":"00:35:01.986","source":"Server","level":"LOG","message":"✓ Compiled in 14ms"}
+{"timestamp":"00:37:21.952","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:37:33.292","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:38:44.566","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:38:45.568","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:39:50.877","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:44:00.437","source":"Server","level":"LOG","message":"✓ Compiled in 105ms"}
+{"timestamp":"00:44:24.341","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:45:08.566","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:46:12.316","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:47:12.927","source":"Server","level":"LOG","message":"✓ Compiled in 99ms"}
+{"timestamp":"00:47:28.666","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:49:37.973","source":"Server","level":"LOG","message":"✓ Compiled in 121ms"}
+{"timestamp":"00:51:40.701","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:55:19.850","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:59:48.210","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
