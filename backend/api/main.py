@@ -16,6 +16,9 @@ from backend.graph.graph import Graph
 
 class ReviewClassificationRequest(BaseModel):
     text: str = Field(..., min_length=1, max_length=5000)
+    tf_idf_threshold: float = Field(default=0.0, ge=0.0, description="Threshold for TF-IDF edges")
+    pmi_threshold: float = Field(default=0.0, ge=0.0, description="Threshold for PMI edges")
+    damping_factor: float = Field(default=0.85, ge=0.0, le=1.0, description="Damping factor for Label Propagation")
 
 app = FastAPI(
     title="Steam Review Classification API",
@@ -53,9 +56,14 @@ def health_check():
 
 
 @app.get("/reviews/mock-classifications")
-def mock_classifications():
-    graph = build_tripartite_graph(mock_documents(), mock_seed_groups())
-    scores = label_propagation(graph, iterations=30, threshold=0.0001)
+def mock_classifications(
+    tf_idf_threshold: float = Query(0.0, ge=0.0, description="Threshold for TF-IDF edges"),
+    pmi_threshold: float = Query(0.0, ge=0.0, description="Threshold for PMI edges"),
+    damping_factor: float = Query(0.85, ge=0.0, le=1.0, description="Damping factor for Label Propagation"),
+    iterations: int = Query(30, ge=1, le=100, description="Number of iterations")
+):
+    graph = build_tripartite_graph(mock_documents(), mock_seed_groups(), tf_idf_threshold=tf_idf_threshold, pmi_threshold=pmi_threshold)
+    scores = label_propagation(graph, iterations=iterations, threshold=0.0001, damping_factor=damping_factor)
     classifications = classify_reviews(graph, scores)
     response = []
     for review_label, category, score, category_scores in classifications:
@@ -176,8 +184,11 @@ def get_dataset_reviews(limit: int = 5):
 
 
 @app.get("/graph/mock-data")
-def mock_graph_data():
-    graph = build_tripartite_graph(mock_documents(), mock_seed_groups())
+def mock_graph_data(
+    tf_idf_threshold: float = Query(0.0, ge=0.0, description="Threshold for TF-IDF edges"),
+    pmi_threshold: float = Query(0.0, ge=0.0, description="Threshold for PMI edges")
+):
+    graph = build_tripartite_graph(mock_documents(), mock_seed_groups(), tf_idf_threshold=tf_idf_threshold, pmi_threshold=pmi_threshold)
 
     nodes = []
     for idx in range(graph.size()):
@@ -218,7 +229,12 @@ def mock_graph_data():
 
 @app.post("/reviews/classify")
 def classify_review(request: ReviewClassificationRequest):
-    result = classify_review_text(request.text)
+    result = classify_review_text(
+        request.text, 
+        tf_idf_threshold=request.tf_idf_threshold, 
+        pmi_threshold=request.pmi_threshold, 
+        damping_factor=request.damping_factor
+    )
 
     if result is None:
         raise HTTPException(

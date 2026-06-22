@@ -75,7 +75,7 @@ def _build_cooccurrence_tables(corpus):
     return word_counts, pair_counts
 
 
-def calculate_pmi(corpus):
+def calculate_pmi(corpus, threshold=0.0):
     """
     Mede coocorrência estatística entre palavras usando PMI.
 
@@ -121,7 +121,7 @@ def calculate_pmi(corpus):
         # NPMI (Normalized PMI): normaliza o score entre [-1, 1]
         npmi = pmi / -log(probability_pair)
 
-        if npmi > 0:
+        if npmi > threshold:
             # NPMI negativo não ajuda como ligação semântica neste grafo.
             pmi_edges.append((word_a, word_b, npmi))
 

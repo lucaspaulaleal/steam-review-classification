@@ -14,7 +14,7 @@ def _category_seed_pairs(seed_groups):
     return pairs
 
 
-def build_tripartite_graph(documents, seed_groups):
+def build_tripartite_graph(documents, seed_groups, tf_idf_threshold=0.0, pmi_threshold=0.0):
     """
     Constroi o grafo tripartido:
     - review -> palavra com peso TF-IDF
@@ -25,8 +25,8 @@ def build_tripartite_graph(documents, seed_groups):
     """
     graph = Graph()
     #Pesos das tres familias de arestas do grafo.
-    tf_idf_weights = calculate_tf_idf(documents)
-    pmi_edges = calculate_pmi(documents)
+    tf_idf_weights = calculate_tf_idf(documents, threshold=tf_idf_threshold)
+    pmi_edges = calculate_pmi(documents, threshold=pmi_threshold)
     seed_pairs = _category_seed_pairs(seed_groups)
 
     for category, _ in seed_groups:
