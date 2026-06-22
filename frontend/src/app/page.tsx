@@ -60,7 +60,7 @@ export default function Home() {
   useEffect(() => {
     async function loadDataset() {
       try {
-        const res = await fetch(`${API_URL}/reviews/dataset?limit=100`);
+        const res = await fetch(`${API_URL}/reviews/dataset?limit=100&t=${Date.now()}`);
         const data = await res.json();
         if (data.items) {
           setDatasetReviews(data.items);

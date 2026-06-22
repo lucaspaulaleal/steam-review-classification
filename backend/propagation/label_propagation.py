@@ -265,7 +265,6 @@ def classify_reviews(graph, scores, top_words_count=5):
         # 3. Descobrir as palavras que mais influenciaram
         top_words = []
         if best_category != "Outros":
-            total_influence = 0.0
             all_words_influence = []
             
             for neighbor_idx, weight in graph.get_neighbors_by_idx(node_idx):
@@ -289,21 +288,24 @@ def classify_reviews(graph, scores, top_words_count=5):
                     if influence > 0:
                         word_clean = neighbor_label.replace("word:", "")
                         all_words_influence.append([word_clean, influence])
-                        total_influence += influence
                         
-            # Normalizar para somar 1.0 (100%)
-            if total_influence > 0:
-                for i in range(len(all_words_influence)):
-                    all_words_influence[i][1] = all_words_influence[i][1] / total_influence
-                    
-            # Ordenar por influencia e pegar os top N
+            # Ordenar por influencia
             for i in range(len(all_words_influence)):
                 for j in range(i + 1, len(all_words_influence)):
                     if all_words_influence[j][1] > all_words_influence[i][1]:
                         all_words_influence[i], all_words_influence[j] = all_words_influence[j], all_words_influence[i]
             
-            # Converter de volta para tupla para nao quebrar compatibilidade
-            top_words = [(w, i) for w, i in all_words_influence[:top_words_count]]
+            # Pegar os top N
+            top_words_list = all_words_influence[:top_words_count]
+            
+            # Normalizar apenas o top N para somar 1.0 (100% de representatividade relativa)
+            top_total_influence = sum(inf for w, inf in top_words_list)
+            if top_total_influence > 0:
+                for i in range(len(top_words_list)):
+                    top_words_list[i][1] = top_words_list[i][1] / top_total_influence
+                    
+            # Converter de volta para tupla
+            top_words = [(w, i) for w, i in top_words_list]
 
         classifications.append((label, best_category, best_raw_score, node_scores, top_words))
 
