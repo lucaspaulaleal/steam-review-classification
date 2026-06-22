@@ -39,7 +39,7 @@ def _initialize_nltk():
 
     _stop_words = set(stopwords.words('portuguese'))
     # Adicionando termos comuns que podem ser ruido, ou que o RSLP pode ter problemas
-    _stop_words.update(["é", "pra", "q", "ta", "pro", "tá", "aí", "ai", "jog", "jogo", "joguinho", "muit", "muito", "pouco", "pouc", "bom", "ruim", "ruin", "pq", "porque", "por", "que", "isso", "aquilo", "este", "esse", "apenas", "mas", "tbm", "tb", "tambem", "também", "sim", "nao", "não", "cara", "você", "vc", "ja", "já", "legal", "com", "cada", "chor", "chorei", "acert", "bonit", "arte", "art", "bonito", "tudo", "super", "nunca", "terrivel", "desejar"])
+    _stop_words.update(["é", "pra", "q", "ta", "pro", "tá", "aí", "ai", "jog", "jogo", "joguinho", "muit", "muito", "pouco", "pouc", "bom", "ruim", "ruin", "pq", "porque", "por", "que", "isso", "aquilo", "este", "esse", "apenas", "mas", "tbm", "tb", "tambem", "também", "sim", "nao", "não", "cara", "você", "vc", "ja", "já", "legal", "com", "cada", "chor", "chorei", "acert", "bonit", "arte", "art", "bonito", "tudo", "super", "nunca", "terrivel", "desejar", "caralh", "caralho", "bofia", "ehehhe", "ach", "acho", "aconselh", "aind", "ainda", "assim", "bons", "alguma", "basic", "basicamente", "boa", "bem", "lanç"])
     _stemmer = RSLPStemmer()
     _is_initialized = True
 
