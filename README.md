@@ -10,6 +10,14 @@
 
 <br/>
 
+## 🌐 Deploy em Produção
+
+A aplicação pode ser acessada diretamente pelo navegador sem a necessidade de instalar o Docker:
+- **Interface Visual (Frontend)**: [Vercel App](https://steam-review-classification.vercel.app/)
+- **API (Backend)**: [Render Web Service](https://steam-review-backend.onrender.com/docs)
+
+*(Nota: O backend gratuito na Render pode levar cerca de 50 segundos para despertar na primeira requisição.)*
+
 ## 📖 Resumo (Abstract)
 
 Este projeto tem como objetivo realizar a classificação automática de reviews textuais da plataforma **Steam**, identificando o aspecto técnico principal abordado pelos jogadores. Como as avaliações oficiais contêm apenas um rótulo de polaridade binária (*Recomendado / Não Recomendado*), utilizamos uma abordagem de **Machine Learning Semissupervisionado** através da modelagem de um **Grafo Tripartido** e da aplicação do algoritmo de **Label Propagation**.
