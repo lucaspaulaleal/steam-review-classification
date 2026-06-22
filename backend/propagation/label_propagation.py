@@ -247,17 +247,22 @@ def classify_reviews(graph, scores, top_words_count=5):
                 break
 
         best_category = "Outros"
-        best_score = 0.0
+        best_adjusted_score = 0.0
+        best_raw_score = 0.0
         for category, value in node_scores:
             # A categoria final e a de maior score normalizado (adjusted_score)
             adjusted_score = value / class_mass.get(category, 1.0)
-            if adjusted_score > best_score:
+            if adjusted_score > best_adjusted_score:
                 best_category = category
-                best_score = adjusted_score
+                best_adjusted_score = adjusted_score
+                best_raw_score = value
 
         # 3. Descobrir as palavras que mais influenciaram
         top_words = []
         if best_category != "Outros":
+            total_influence = 0.0
+            all_words_influence = []
+            
             for neighbor_idx, weight in graph.get_neighbors_by_idx(node_idx):
                 if graph.node_types[neighbor_idx] == "word":
                     neighbor_label = graph.labels[neighbor_idx]
@@ -278,17 +283,23 @@ def classify_reviews(graph, scores, top_words_count=5):
                     influence = weight * cat_score
                     if influence > 0:
                         word_clean = neighbor_label.replace("word:", "")
-                        top_words.append((word_clean, influence))
+                        all_words_influence.append([word_clean, influence])
+                        total_influence += influence
                         
+            # Normalizar para somar 1.0 (100%)
+            if total_influence > 0:
+                for i in range(len(all_words_influence)):
+                    all_words_influence[i][1] = all_words_influence[i][1] / total_influence
+                    
             # Ordenar por influencia e pegar os top N
-            # Sort simple in place to respect limits
-            for i in range(len(top_words)):
-                for j in range(i + 1, len(top_words)):
-                    if top_words[j][1] > top_words[i][1]:
-                        top_words[i], top_words[j] = top_words[j], top_words[i]
+            for i in range(len(all_words_influence)):
+                for j in range(i + 1, len(all_words_influence)):
+                    if all_words_influence[j][1] > all_words_influence[i][1]:
+                        all_words_influence[i], all_words_influence[j] = all_words_influence[j], all_words_influence[i]
             
-            top_words = top_words[:top_words_count]
+            # Converter de volta para tupla para nao quebrar compatibilidade
+            top_words = [(w, i) for w, i in all_words_influence[:top_words_count]]
 
-        classifications.append((label, best_category, best_score, node_scores, top_words))
+        classifications.append((label, best_category, best_raw_score, node_scores, top_words))
 
     return classifications
