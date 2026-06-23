@@ -54,9 +54,12 @@ Para garantir que o modelo não seja poluído por "lixo eletrônico" ou ambiguid
 - **Sublinear TF Scaling**: Amortecimento logarítmico aplicado à frequência de termos (`1 + log(tf)`) para evitar que repetições exaustivas na mesma review (ex: "lag lag lag...") distorçam o Grafo.
 
 ### 🔮 Inferência em Tempo Real e Alta Performance
-A API possui um módulo de classificação em *Real-Time* (`/backend/classification`) que injeta dinamicamente textos não vistos previamente pelo modelo no Grafo, extrai seus radicais via RSLPStemmer, calcula similaridade contra as `seeds` estendidas e retorna a propagação probabilística instantaneamente.
+A API possui um módulo de classificação em *Real-Time* (`/reviews/classify`) que injeta dinamicamente textos não vistos previamente pelo modelo no Grafo, extrai seus radicais via RSLPStemmer e normalização severa de acentos, calcula similaridade contra as `seeds` estendidas e retorna a propagação probabilística instantaneamente.
 
-Para viabilizar a fluidez na interface visual, os cálculos da propagação do dataset completo de testes (~200+ reviews ativas balanceadas) ficam cacheados nativamente (`steam_reviews_cache.json`), garantindo renderização ultra-rápida na exploração de dados do Frontend (Next.js).
+Para viabilizar a fluidez na interface visual (totalmente responsiva para Mobile e Desktop), os cálculos da propagação do dataset completo de testes ficam cacheados nativamente, garantindo renderização ultra-rápida na exploração de dados do Frontend (Next.js).
+
+### 🔍 Explicabilidade (XAI) e Rastreabilidade com BFS
+Um dos maiores desafios em Machine Learning é justificar a decisão do modelo. O projeto resolve isso com um módulo de explicabilidade (`/demo/bfs-path`) utilizando o algoritmo clássico de **Busca em Largura (BFS)**. Esse algoritmo encontra o caminho mais curto na rede tripartida, permitindo rastrear o raciocínio exato da IA (ex: *A Review R1 foi classificada como Performance porque o termo com maior peso conectado a ela era "crash"*).
 
 ---
 

@@ -87,6 +87,10 @@
     font-size: 1.5rem;
 }
 
+.header p {
+    color: var(--white);
+}
+
 
 /* Seção de título de Jogo */
 
@@ -94,6 +98,11 @@
 .TituloJogo p {
     color: var(--gray);
     font-size: 1rem;
+}
+
+.NomeJogo {
+    color: var(--white);
+    overflow-wrap: anywhere;
 }
 
 
@@ -116,6 +125,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    min-width: 0;
 
 }
 
@@ -133,6 +143,7 @@
     flex-direction: column;
     gap: .5rem;
     font-size: .8rem;
+    min-width: 0;
 }
 
 .positiveAnalises {
@@ -373,6 +384,7 @@
     background-color: var(--dark-blue);
     font-weight: bold;
     font-size: .7rem;
+    color: var(--light-gray);
 }
 
 
@@ -477,6 +489,7 @@
     /* justify-content: center; */
     gap: 0.2rem;
     width: 100%;
+    min-width: 0;
 }
 
 .ReviewRecomendationPos {
@@ -576,21 +589,70 @@ a.secondary {
 
 @media (max-width: 1024px) {
   .gridContainer {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2rem;
   }
   
   .rightColumn {
     position: static;
+    width: 100%;
+  }
+  
+  .leftColumn {
+    width: 100%;
   }
 }
 
 @media (max-width: 600px) {
+  .page {
+    align-items: stretch;
+  }
+
+  .header {
+    gap: .75rem;
+    padding: .75rem 1rem;
+  }
+
+  .header div {
+    font-size: .95rem;
+    gap: .75rem;
+  }
+
   .main {
-    padding: 48px 24px;
+    padding: 1rem;
+    max-width: none;
+  }
+
+  .gridContainer {
+    gap: 1rem;
+  }
+
+  .leftColumn,
+  .rightColumn {
+    gap: 1rem;
+  }
+
+  .TituloJogo p {
+    font-size: .85rem;
+  }
+
+  .NomeJogo {
+    font-size: 1.75rem;
+    line-height: 2rem;
   }
 
   .analiseGeral {
     flex-direction: column;
+    width: 100%;
+    gap: .6rem;
+    padding-top: .8rem;
+  }
+
+  .containerGeral {
+    align-items: flex-start;
+    padding: .85rem;
+    text-align: left;
     width: 100%;
   }
 
@@ -598,10 +660,24 @@ a.secondary {
     width: 100%;
   }
 
+  .realtimeClassifier,
+  .ContainerFiltro {
+    padding: .85rem;
+  }
+
   .realtimeHeader,
   .formFooter {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .realtimeHeader {
+    gap: .6rem;
+  }
+
+  .reviewInput {
+    min-height: 10rem;
+    font-size: 1rem;
   }
 
   .categoryBadge,
@@ -613,14 +689,77 @@ a.secondary {
     grid-template-columns: 1fr;
   }
 
-  .intro {
-    gap: 16px;
+  .resultSummary strong {
+    font-size: 1.2rem;
   }
 
-  .intro h1 {
-    font-size: 32px;
-    line-height: 40px;
-    letter-spacing: -1.92px;
+  .scoreHeader {
+    font-size: .8rem;
+  }
+
+  .buttonSection,
+  .containerCategorias {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .5rem;
+  }
+
+  .button,
+  .filterPill {
+    min-height: 2.75rem;
+    padding: .75rem;
+    text-align: left;
+    width: 100%;
+  }
+
+  .containerCategorias p {
+    margin-bottom: .25rem;
+  }
+
+  .graphPanel {
+    margin-top: .5rem;
+    min-height: 0;
+    overflow-x: auto;
+  }
+
+  .ContainerReviews {
+    margin-top: 1.5rem;
+  }
+
+  .ReviewCardHeader {
+    align-items: flex-start;
+    gap: .75rem;
+    padding: .75rem;
+    flex-wrap: wrap;
+  }
+
+  .ReviewIconContainer {
+    flex: 0 0 auto;
+  }
+
+  .ReviewMarcadores {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .ReviewContent {
+    padding: 1rem;
+    font-size: .9rem;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .main {
+    padding: 1.5rem;
+  }
+
+  .buttonSection {
+    gap: .5rem;
+  }
+
+  .button {
+    flex: 1 1 12rem;
   }
 }
 
