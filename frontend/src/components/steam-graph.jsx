@@ -171,14 +171,14 @@ export default function SteamGraph() {
 
   if (loading) {
     return (
-      <div style={{ background: "#080f1e", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#e2e8f0" }}>
+      <div style={{ background: "#080f1e", minHeight: "180px", display: "flex", alignItems: "center", justifyContent: "center", color: "#e2e8f0" }}>
         Carregando grafo...
       </div>
     );
   }
 
   return (
-    <div style={{ background: "#080f1e", minHeight: "100vh", padding: "16px 12px", fontFamily: "monospace", color: "#e2e8f0" }}>
+    <div style={{ background: "#080f1e", minHeight: "0", minWidth: "720px", padding: "16px 12px", fontFamily: "monospace", color: "#e2e8f0" }}>
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: "14px" }}>
         <div style={{ fontSize: "13px", fontWeight: 700, color: "#e2e8f0", letterSpacing: "1px" }}>

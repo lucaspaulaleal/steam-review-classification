@@ -34,6 +34,7 @@ cinza escuro fundo
   justify-content: center;
   font-family: var(--font-geist-sans);
   background-color: var(--background);
+  min-height: 100vh;
 }
 
 .main {
@@ -60,12 +61,21 @@ cinza escuro fundo
     font-weight: bold;
 }
 
+.header p {
+    color: var(--white);
+}
+
 /* Seção de título de Jogo */
 
 
 .TituloJogo p {
     color: var(--gray);
     font-size: 1rem;
+}
+
+.NomeJogo {
+    color: var(--white);
+    overflow-wrap: anywhere;
 }
 
 
@@ -77,6 +87,7 @@ cinza escuro fundo
     padding-top: 1rem;
     padding-bottom: 1rem;
     color: var(--gray);
+    width: 100%;
 
 }
 
@@ -87,6 +98,7 @@ cinza escuro fundo
     display: flex;
     flex-direction: column;
     justify-content: center;
+    min-width: 0;
 
 }
 
@@ -104,6 +116,7 @@ cinza escuro fundo
     flex-direction: column;
     gap: .5rem;
     font-size: .8rem;
+    min-width: 0;
 }
 
 .positiveAnalises {
@@ -338,6 +351,7 @@ cinza escuro fundo
     background-color: var(--dark-blue);
     font-weight: bold;
     font-size: .7rem;
+    color: var(--light-gray);
 }
 
 
@@ -386,7 +400,7 @@ cinza escuro fundo
     background-color: var(--background-blue);
     display: flex;
     flex-direction: row;
-    justify-content:space-between;
+    justify-content: space-between;
     gap: 1rem;
 }
 
@@ -403,10 +417,12 @@ cinza escuro fundo
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
+    min-width: 0;
 }
 
 .ReviewRecomendation {
-
+    color: var(--light-gray);
+    font-weight: 700;
 }
 
 .ReviewId {
@@ -467,12 +483,44 @@ a.secondary {
 }
 
 @media (max-width: 600px) {
+  .page {
+    align-items: stretch;
+  }
+
+  .header {
+    gap: .75rem;
+    padding: .75rem 1rem;
+  }
+
+  .header p {
+    font-size: .95rem;
+  }
+
   .main {
-    padding: 48px 24px;
+    padding: 1rem;
+    max-width: none;
+  }
+
+  .TituloJogo p {
+    font-size: .85rem;
+  }
+
+  .NomeJogo {
+    font-size: 1.75rem;
+    line-height: 2rem;
   }
 
   .analiseGeral {
     flex-direction: column;
+    width: 100%;
+    gap: .6rem;
+    padding-top: .8rem;
+  }
+
+  .containerGeral {
+    align-items: flex-start;
+    padding: .85rem;
+    text-align: left;
     width: 100%;
   }
 
@@ -480,10 +528,24 @@ a.secondary {
     width: 100%;
   }
 
+  .realtimeClassifier,
+  .ContainerFiltro {
+    padding: .85rem;
+  }
+
   .realtimeHeader,
   .formFooter {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .realtimeHeader {
+    gap: .6rem;
+  }
+
+  .reviewInput {
+    min-height: 10rem;
+    font-size: 1rem;
   }
 
   .categoryBadge,
@@ -495,14 +557,75 @@ a.secondary {
     grid-template-columns: 1fr;
   }
 
-  .intro {
-    gap: 16px;
+  .resultSummary strong {
+    font-size: 1.2rem;
   }
 
-  .intro h1 {
-    font-size: 32px;
-    line-height: 40px;
-    letter-spacing: -1.92px;
+  .scoreHeader {
+    font-size: .8rem;
+  }
+
+  .buttonSection,
+  .containerCategorias {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .5rem;
+  }
+
+  .button,
+  .containerCategorias button {
+    min-height: 2.75rem;
+    padding: .75rem;
+    text-align: left;
+    width: 100%;
+  }
+
+  .containerCategorias p {
+    margin-bottom: .25rem;
+  }
+
+  .graphPanel {
+    margin-top: 1.5rem;
+    overflow-x: auto;
+  }
+
+  .ContainerReviews {
+    margin-top: 1.5rem;
+  }
+
+  .ReviewCardHeader {
+    align-items: flex-start;
+    gap: .75rem;
+    padding: .75rem;
+  }
+
+  .ReviewCardHeader img {
+    flex: 0 0 auto;
+  }
+
+  .ReviewCardHeader div {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .45rem;
+    padding: 0;
+  }
+
+  .ReviewMarcadores {
+    flex-wrap: wrap;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .main {
+    padding: 1.5rem;
+  }
+
+  .buttonSection {
+    gap: .5rem;
+  }
+
+  .button {
+    flex: 1 1 12rem;
   }
 }
 
