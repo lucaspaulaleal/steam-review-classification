@@ -5,13 +5,6 @@ from backend.graph.pmi import calculate_pmi
 from backend.preprocessing.tf_idf import calculate_tf_idf
 
 
-def _find_index(items, target):
-    for i in range(len(items)):
-        if items[i] == target:
-            return i
-    return -1
-
-
 def _category_seed_pairs(seed_groups):
     pairs = []
     for category, seeds in seed_groups:
@@ -21,7 +14,7 @@ def _category_seed_pairs(seed_groups):
     return pairs
 
 
-def build_tripartite_graph(documents, seed_groups):
+def build_tripartite_graph(documents, seed_groups, tf_idf_threshold=0.0, pmi_threshold=0.0):
     """
     Constroi o grafo tripartido:
     - review -> palavra com peso TF-IDF
@@ -32,8 +25,8 @@ def build_tripartite_graph(documents, seed_groups):
     """
     graph = Graph()
     #Pesos das tres familias de arestas do grafo.
-    tf_idf_weights = calculate_tf_idf(documents)
-    pmi_edges = calculate_pmi(documents)
+    tf_idf_weights = calculate_tf_idf(documents, threshold=tf_idf_threshold)
+    pmi_edges = calculate_pmi(documents, threshold=pmi_threshold)
     seed_pairs = _category_seed_pairs(seed_groups)
 
     for category, _ in seed_groups:
@@ -79,22 +72,20 @@ def build_tripartite_graph(documents, seed_groups):
 
 
 def mock_documents():
-    #Reviews pequenas para validar o fluxo antes do dataset real.
+    #Reviews pequenas simulando o output já lematizado do NLP.
+    #Balanceado com 1 review por categoria para que o CMN não penalize desproporcionalmente.
     return [
-        ("R1", ["fps", "lag", "crash", "fps"]),
-        ("R2", ["textura", "grafico", "resolucao", "visual"]),
-        ("R3", ["controles", "gameplay", "diversao", "jogabilidade"]),
-        ("R4", ["historia", "enredo", "personagem", "narrativa"]),
-        ("R5", ["fps", "textura", "resolucao", "lag"]),
-        ("R6", ["historia", "controles", "diversao", "enredo"]),
+        ("R1", ["fp", "lag", "crash", "trav"]),
+        ("R2", ["text", "graf", "resoluca", "visual"]),
+        ("R3", ["control", "gameplay", "diversa", "jogabil"]),
+        ("R4", ["hist", "enred", "person", "narr"]),
     ]
 
 
 def mock_seed_groups():
-    #Seeds escolhidas manualmente como exemplos de cada aspecto tecnico.
     return [
-        ("Performance", ["fps", "lag", "crash", "stuttering"]),
-        ("Graficos", ["textura", "resolucao", "grafico", "visual"]),
-        ("Gameplay", ["controles", "gameplay", "diversao", "jogabilidade"]),
-        ("Narrativa", ["historia", "enredo", "personagem", "narrativa"]),
+        ("Performance", ['fp', 'lag', 'crash', 'stuttering', 'trav', 'otimiz', 'desempenh', 'bug', 'qued', 'fram', 'gargal', 'pes', 'lev', 'rod', 'rod', 'lis', 'pc', 'rtx', 'gtx', 'process', 'plac', 'memor', 'ram', 'cpu', 'gpu', 'engin']),
+        ("Gráfico", ['text', 'resoluca', 'graf', 'visual', 'lind', 'fei', 'bel', 'sombr', 'iluminaca', 'raytracing', 'pais', 'cenari', 'real', 'fei', 'maravilh', '4k']),
+        ("Gameplay", ['control', 'gameplay', 'diversa', 'jogabil', 'mecan', 'jog', 'tir', 'dirig', 'missa', 'combat', 'loot', 'skill', 'habil', 'farm', 'grind', 'fisic', 'mov', 'pul', 'tirotei', 'arm', 'carr', 'chef', 'bos', 'fas', 'level', 'dificuldad', 'flu', 'respond', 'roaming', 'assalt', 'roub', 'tuning', 'heist', 'onlin', 'vici', 'corr']),
+        ("Narrativa", ['hist', 'enred', 'person', 'narr', 'campanh', 'final', 'lor', 'dialog', 'dubl', 'legend', 'traduca', 'emocion', 'vila', 'hero', 'plot', 'twist', 'rot', 'escrit', 'leit', 'livr']),
     ]

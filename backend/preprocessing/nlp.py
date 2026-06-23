@@ -1,6 +1,7 @@
 # backend/preprocessing/nlp.py
 
 import re
+import unicodedata
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import RSLPStemmer
@@ -39,8 +40,8 @@ def _initialize_nltk():
 
     _stop_words = set(stopwords.words('portuguese'))
     # Adicionando termos comuns que podem ser ruido, ou que o RSLP pode ter problemas
-    _stop_words.update(["é", "pra", "q", "ta", "pro", "tá", "aí", "ai"]) 
-    
+    # Como removemos os acentos antes, podemos colocar tudo sem acento
+    _stop_words.update(["e", "pra", "q", "ta", "pro", "ai", "jog", "jogo", "joguinho", "muit", "muito", "pouco", "pouc", "bom", "ruim", "ruin", "pq", "porque", "por", "que", "isso", "aquilo", "este", "esse", "apenas", "mas", "tbm", "tb", "tambem", "sim", "nao", "cara", "voce", "vc", "ja", "legal", "com", "cada", "chor", "chorei", "acert", "bonit", "arte", "art", "bonito", "tudo", "super", "nunca", "terrivel", "desejar", "caralh", "caralho", "bofia", "ehehhe", "ach", "acho", "aconselh", "aind", "ainda", "assim", "bons", "alguma", "basic", "basicamente", "boa", "bem", "lanc", "pena", "dlc", "espetacular"])
     _stemmer = RSLPStemmer()
     _is_initialized = True
 
@@ -48,7 +49,7 @@ def _initialize_nltk():
 def clean_text(text: str) -> list[str]:
     """
     Recebe um texto puro (review), limpa pontuações, converte para minúsculo,
-    remove stop-words em português e extrai o radical das palavras (Stemming).
+    remove acentos, remove stop-words em português e extrai o radical das palavras (Stemming).
     Retorna uma lista de tokens.
     """
     if not isinstance(text, str) or not text.strip():
@@ -56,18 +57,21 @@ def clean_text(text: str) -> list[str]:
 
     _initialize_nltk()
 
-    # 1. Lowercase e remoção de pontuação/números usando regex
-    # Mantém apenas letras minúsculas (incluindo acentuadas).
+    # 1. Lowercase e remoção de acentos
     text = text.lower()
-    text = re.sub(r'[^a-záéíóúâêîôûãõç]+', ' ', text)
+    text = unicodedata.normalize('NFKD', text)
+    text = "".join([c for c in text if not unicodedata.combining(c)])
 
-    # 2. Tokenização
+    # 2. Remoção de pontuação/números usando regex
+    text = re.sub(r'[^a-z0-9]+', ' ', text)
+
+    # 3. Tokenização
     tokens = word_tokenize(text, language='portuguese')
 
     # 3. Remoção de Stop-words e 4. Stemming (Lematização básica)
     processed_tokens = []
     for word in tokens:
-        if word not in _stop_words and len(word) > 2:
+        if word not in _stop_words and len(word) > 1:
             stemmed = _stemmer.stem(word)
             processed_tokens.append(stemmed)
 

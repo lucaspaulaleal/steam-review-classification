@@ -62,7 +62,7 @@ def _build_df_table(documents):
     return df_table
 
 
-def calculate_tf_idf(documents):
+def calculate_tf_idf(documents, threshold=0.0):
     """
     Calcula TF-IDF manualmente usando listas.
 
@@ -98,8 +98,9 @@ def calculate_tf_idf(documents):
             continue
 
         for token in unique_tokens:
-            # TF: importância local da palavra na review.
-            term_frequency = _count_token(tokens, token) / len(tokens)
+            # TF sublinear (amortecimento logarítmico): evita que repetições excessivas dominem o peso.
+            count = _count_token(tokens, token)
+            term_frequency = 1 + log(count)
 
             # DF: busca binária O(log V) em vez de varredura O(D).
             pos = binary_search_tuples(df_table, token)
@@ -109,7 +110,11 @@ def calculate_tf_idf(documents):
             inverse_document_frequency = (
                 log((1 + total_documents) / (1 + document_frequency)) + 1
             )
-            weighted_terms.append((token, term_frequency * inverse_document_frequency))
+            
+            tf_idf_score = term_frequency * inverse_document_frequency
+            
+            if tf_idf_score > threshold:
+                weighted_terms.append((token, tf_idf_score))
 
         result.append((review_label, weighted_terms))
 

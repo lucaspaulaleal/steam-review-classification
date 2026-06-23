@@ -10,6 +10,14 @@
 
 <br/>
 
+## 🌐 Deploy em Produção
+
+A aplicação pode ser acessada diretamente pelo navegador sem a necessidade de instalar o Docker:
+- **Interface Visual (Frontend)**: [Render Frontend Web](https://steam-review-classification-frontend.onrender.com)
+- **API (Backend)**: [Render Backend Docs](https://steam-review-backend.onrender.com/docs)
+
+*(Nota: O backend gratuito na Render pode levar cerca de 50 segundos para despertar na primeira requisição.)*
+
 ## 📖 Resumo (Abstract)
 
 Este projeto tem como objetivo realizar a classificação automática de reviews textuais da plataforma **Steam**, identificando o aspecto técnico principal abordado pelos jogadores. Como as avaliações oficiais contêm apenas um rótulo de polaridade binária (*Recomendado / Não Recomendado*), utilizamos uma abordagem de **Machine Learning Semissupervisionado** através da modelagem de um **Grafo Tripartido** e da aplicação do algoritmo de **Label Propagation**.
@@ -35,8 +43,20 @@ O texto das avaliações é estruturado matematicamente em uma rede complexa for
 A propagação da informação flui com base em pesos matematicamente definidos:
 
 - **Arestas $R \leftrightarrow P$ (Review-Palavra)**: Ponderadas utilizando **TF-IDF** (Term Frequency - Inverse Document Frequency), indicando a relevância estatística da palavra para o documento específico.
-- **Arestas $P \leftrightarrow P$ (Palavra-Palavra)**: Ponderadas pelo índice **PMI** (Pointwise Mutual Information), capturando as probabilidades conjuntas de coocorrência de termos em toda a base de dados.
+- **Arestas $P \leftrightarrow P$ (Palavra-Palavra)**: Ponderadas pelo índice **NPMI** (Normalized Pointwise Mutual Information), capturando as probabilidades conjuntas de coocorrência de termos em toda a base de dados.
 - **Arestas $P \leftrightarrow C$ (Palavra-Categoria)**: Sementes (seeds) inicialmente polarizadas com peso máximo conectando palavras-chave óbvias (ex: "fps" $\rightarrow$ "Performance").
+
+### 🧠 Refinamentos de Processamento de Linguagem Natural (NLP)
+Para garantir que o modelo não seja poluído por "lixo eletrônico" ou ambiguidades, o pipeline de NLP foi massivamente aprimorado com as seguintes defesas:
+- **Filtro de Idioma (RegEx)**: Descarte de análises preenchidas majoritariamente com caracteres em inglês, preservando o foco no léxico PT-BR.
+- **Filtro Anti-Ruído (Stop-words)**: Além da biblioteca do NLTK, adicionamos mais de 40 stop-words personalizadas e informais do universo gamer brasileiro ("tbm", "pra", "joguinho").
+- **Vocabulário Direcionado (Seeds Expandidas)**: As "Sementes" do Grafo foram expandidas com dezenas de gírias e jargões da comunidade (ex: "stuttering", "fps", "lag", "raytracing", "grind", "loot", "plot", "dublag").
+- **Sublinear TF Scaling**: Amortecimento logarítmico aplicado à frequência de termos (`1 + log(tf)`) para evitar que repetições exaustivas na mesma review (ex: "lag lag lag...") distorçam o Grafo.
+
+### 🔮 Inferência em Tempo Real e Alta Performance
+A API possui um módulo de classificação em *Real-Time* (`/backend/classification`) que injeta dinamicamente textos não vistos previamente pelo modelo no Grafo, extrai seus radicais via RSLPStemmer, calcula similaridade contra as `seeds` estendidas e retorna a propagação probabilística instantaneamente.
+
+Para viabilizar a fluidez na interface visual, os cálculos da propagação do dataset completo de testes (~200+ reviews ativas balanceadas) ficam cacheados nativamente (`steam_reviews_cache.json`), garantindo renderização ultra-rápida na exploração de dados do Frontend (Next.js).
 
 ---
 
@@ -61,12 +81,12 @@ A aplicação é dividida em três frentes e totalmente conteinerizada para gara
 ```text
 /
 ├── backend/                   # Lógica de ML e API
-│   ├── api/                   # Controladores REST FastAPI
+│   ├── api/                   # Controladores REST FastAPI (main.py)
+│   ├── classification/        # Inferência de NLP em Tempo Real
 │   ├── graph/                 # Estrutura do Grafo em Listas e Builder
-│   ├── preprocessing/         # NLP e TF-IDF manual
-│   ├── propagation/           # Label Propagation e PMI manual
-│   ├── tests/                 # Testes unitários (PyTest)
-│   └── main.py                # Ponto de inicialização
+│   ├── preprocessing/         # NLP, Sublinear TF-IDF manual
+│   ├── propagation/           # Label Propagation e NPMI manual
+│   └── tests/                 # Testes unitários (PyTest)
 ├── frontend/                  # Interface Visual (Next.js)
 ├── infra/                     # Configurações de Deploy (Vercel/Render)
 ├── scripts/                   # Automação de extração do Kaggle
@@ -127,6 +147,12 @@ Depois acesse:
 
 ### Documentação de reprodutibilidade
 As instruções detalhadas para avaliação do projeto do zero estão em [`docs/reprodutibilidade.md`](docs/reprodutibilidade.md).
+
+---
+
+## 🤖 Inteligência Artificial como Project Manager
+
+Durante a etapa final do projeto, utilizamos agentes autônomos de Inteligência Artificial (LLMs) como *Planners* e *Project Managers*. A IA foi responsável por fazer um levantamento arquitetural completo, elencar as *issues* necessárias para a conclusão do escopo, otimizar tarefas de código e auxiliar os desenvolvedores na implementação e testes das fórmulas matemáticas complexas (como Sublinear TF Scaling e NPMI). Essa abordagem garantiu uma refatoração segura e o cumprimento rigoroso de todas as métricas exigidas pela disciplina.
 
 ---
 

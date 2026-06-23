@@ -1,11 +1,34 @@
 #backend/propagation/label_propagation.py
 
 
-def _find_index(items, target):
-    for i in range(len(items)):
-        if items[i] == target:
-            return i
+def _binary_search(items, target):
+    left = 0
+    right = len(items) - 1
+
+    while left <= right:
+        mid = (left + right) // 2
+        if items[mid] == target:
+            return mid
+        if items[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+
     return -1
+
+
+def _find_insert_position(items, target):
+    left = 0
+    right = len(items)
+
+    while left < right:
+        mid = (left + right) // 2
+        if items[mid] < target:
+            left = mid + 1
+        else:
+            right = mid
+
+    return left
 
 
 def _category_labels(graph):
@@ -13,7 +36,8 @@ def _category_labels(graph):
     for i in range(graph.size()):
         #Somente nos de categoria viram dimensoes do vetor de scores.
         if graph.node_types[i] == "category":
-            categories.append(graph.labels[i])
+            insert_pos = _find_insert_position(categories, graph.labels[i])
+            categories.insert(insert_pos, graph.labels[i])
     return categories
 
 
@@ -67,14 +91,7 @@ def _max_delta(old_scores, new_scores, categories):
     return max_delta
 
 
-def label_propagation(graph, iterations=20, threshold=0.001):
-    """
-    Propaga os rotulos das categorias pelo grafo.
-
-    O grafo deve ter arestas bidirecionais nos caminhos em que a informacao
-    precisa circular. Nos de categoria ficam fixos com score 1.0 neles mesmos.
-    """
-    categories = _category_labels(graph)
+def _initial_scores(graph, categories):
     scores = []
 
     for node_idx in range(graph.size()):
@@ -82,43 +99,78 @@ def label_propagation(graph, iterations=20, threshold=0.001):
 
         if graph.node_types[node_idx] == "category":
             #Categoria comeca fixa nela mesma, como rotulo conhecido.
-            category_idx = _find_index(categories, graph.labels[node_idx])
+            category_idx = _binary_search(categories, graph.labels[node_idx])
             if category_idx != -1:
                 label, _ = node_scores[category_idx]
                 node_scores[category_idx] = (label, 1.0)
 
         scores.append(node_scores)
 
+    return scores
+
+
+def _propagate_once(graph, scores, categories, initial_scores, damping_factor):
+    new_scores = []
+
+    for node_idx in range(graph.size()):
+        if graph.node_types[node_idx] == "category":
+            #Seeds finais nao mudam durante a propagacao.
+            new_scores.append(scores[node_idx])
+            continue
+
+        propagated = _empty_score_vector(categories)
+        total_weight = 0.0
+
+        for neighbor_idx, weight in graph.get_neighbors_by_idx(node_idx):
+            #Cada vizinho contribui proporcionalmente ao peso da aresta.
+            total_weight += weight
+            for category in categories:
+                _add_score(
+                    propagated,
+                    category,
+                    _get_score(scores[neighbor_idx], category) * weight,
+                )
+
+        if total_weight > 0.0:
+            #Divide pela soma dos pesos para evitar favorecer nos muito conectados.
+            scaled = []
+            for category, value in propagated:
+                scaled.append((category, value / total_weight))
+            propagated = _normalize(scaled)
+            
+        # Mistura com o score inicial usando o damping_factor
+        blended = []
+        for category in categories:
+            prop_val = _get_score(propagated, category)
+            init_val = _get_score(initial_scores[node_idx], category)
+            final_val = (damping_factor * prop_val) + ((1.0 - damping_factor) * init_val)
+            blended.append((category, final_val))
+
+        new_scores.append(blended)
+
+    return new_scores
+
+
+def _scores_result(graph, scores):
+    result = []
+    for node_idx in range(graph.size()):
+        result.append((graph.labels[node_idx], scores[node_idx]))
+    return result
+
+
+def label_propagation(graph, iterations=20, threshold=0.001, damping_factor=0.85):
+    """
+    Propaga os rotulos das categorias pelo grafo.
+
+    O grafo deve ter arestas bidirecionais nos caminhos em que a informacao
+    precisa circular. Nos de categoria ficam fixos com score 1.0 neles mesmos.
+    """
+    categories = _category_labels(graph)
+    initial = _initial_scores(graph, categories)
+    scores = initial
+
     for _ in range(iterations):
-        new_scores = []
-
-        for node_idx in range(graph.size()):
-            if graph.node_types[node_idx] == "category":
-                #Seeds finais nao mudam durante a propagacao.
-                new_scores.append(scores[node_idx])
-                continue
-
-            propagated = _empty_score_vector(categories)
-            total_weight = 0.0
-
-            for neighbor_idx, weight in graph.get_neighbors_by_idx(node_idx):
-                #Cada vizinho contribui proporcionalmente ao peso da aresta.
-                total_weight += weight
-                for category in categories:
-                    _add_score(
-                        propagated,
-                        category,
-                        _get_score(scores[neighbor_idx], category) * weight,
-                    )
-
-            if total_weight > 0.0:
-                #Divide pela soma dos pesos para evitar favorecer nos muito conectados.
-                scaled = []
-                for category, value in propagated:
-                    scaled.append((category, value / total_weight))
-                propagated = _normalize(scaled)
-
-            new_scores.append(propagated)
+        new_scores = _propagate_once(graph, scores, categories, initial, damping_factor)
 
         if _max_delta(scores, new_scores, categories) < threshold:
             #Para quando as mudancas ficam pequenas o suficiente.
@@ -127,16 +179,62 @@ def label_propagation(graph, iterations=20, threshold=0.001):
 
         scores = new_scores
 
-    result = []
-    for node_idx in range(graph.size()):
-        result.append((graph.labels[node_idx], scores[node_idx]))
-    return result
+    return _scores_result(graph, scores)
 
 
-def classify_reviews(graph, scores):
-    """Retorna a melhor categoria para cada no de review."""
+def label_propagation_with_history(graph, iterations=20, threshold=0.001, damping_factor=0.85):
+    """
+    Executa a propagacao e tambem registra o max_delta por iteracao.
+    Esse historico serve como evidencia matematica de convergencia.
+    """
+    categories = _category_labels(graph)
+    initial = _initial_scores(graph, categories)
+    scores = initial
+    history = []
+
+    for iteration in range(1, iterations + 1):
+        new_scores = _propagate_once(graph, scores, categories, initial, damping_factor)
+        max_delta = _max_delta(scores, new_scores, categories)
+        history.append((iteration, max_delta))
+
+        scores = new_scores
+        if max_delta < threshold:
+            break
+
+    return _scores_result(graph, scores), history
+
+
+def classify_reviews(graph, scores, top_words_count=5):
+    """
+    Retorna a melhor categoria para cada no de review aplicando Class Mass Normalization (CMN).
+    Aplica a normalizacao pelas massas totais acumuladas nas reviews para evitar que 
+    categorias superconectadas (hubs) dominem a classificacao.
+    Tambem retorna as principais palavras que influenciaram a decisao.
+    """
     classifications = []
+    
+    # 1. Calcular a massa total (soma de scores) de cada categoria em todos os nos de review
+    class_mass = {}
+    for node_idx in range(graph.size()):
+        if graph.node_types[node_idx] != "review":
+            continue
+            
+        label = graph.labels[node_idx]
+        node_scores = []
+        for score_label, score_values in scores:
+            if score_label == label:
+                node_scores = score_values
+                break
+                
+        for category, value in node_scores:
+            class_mass[category] = class_mass.get(category, 0.0) + value
 
+    # Evitar divisao por zero caso uma categoria tenha massa 0
+    for cat in class_mass:
+        if class_mass[cat] == 0.0:
+            class_mass[cat] = 1.0
+
+    # 2. Classificar cada review ajustando o score pela massa da classe
     for node_idx in range(graph.size()):
         if graph.node_types[node_idx] != "review":
             continue
@@ -148,14 +246,75 @@ def classify_reviews(graph, scores):
                 node_scores = score_values
                 break
 
-        best_category = ""
-        best_score = -1.0
+        cmn_scores = []
         for category, value in node_scores:
-            #A categoria final e a de maior score.
-            if value > best_score:
-                best_category = category
-                best_score = value
+            cmn_val = value / class_mass.get(category, 1.0)
+            cmn_scores.append((category, cmn_val))
+            
+        # Normaliza node_scores após CMN para somar 1.0 para o Frontend (Confiança Relativa e Barras)
+        total_cmn = sum(v for c, v in cmn_scores)
+        if total_cmn > 0:
+            node_scores = [(c, v / total_cmn) for c, v in cmn_scores]
+        else:
+            node_scores = cmn_scores
 
-        classifications.append((label, best_category, best_score, node_scores))
+        best_category = "Outros"
+        best_raw_score = 0.0
+        for category, value in node_scores:
+            if value > best_raw_score:
+                best_category = category
+                best_raw_score = value
+
+        # 3. Descobrir as palavras que mais influenciaram
+        top_words = []
+        if best_category != "Outros":
+            words_dict = {}
+            
+            for neighbor_idx, weight in graph.get_neighbors_by_idx(node_idx):
+                if graph.node_types[neighbor_idx] == "word":
+                    neighbor_label = graph.labels[neighbor_idx]
+                    
+                    # Recupera o score da palavra vizinha para a categoria vencedora
+                    n_scores = []
+                    for score_label, score_values in scores:
+                        if score_label == neighbor_label:
+                            n_scores = score_values
+                            break
+                            
+                    cat_score = 0.0
+                    for c, v in n_scores:
+                        if c == best_category:
+                            cat_score = v
+                            break
+                            
+                    influence = weight * cat_score
+                    if influence > 0:
+                        word_clean = neighbor_label.replace("word:", "")
+                        if word_clean in words_dict:
+                            words_dict[word_clean] += influence
+                        else:
+                            words_dict[word_clean] = influence
+            
+            all_words_influence = [[w, i] for w, i in words_dict.items()]
+                        
+            # Ordenar por influencia
+            for i in range(len(all_words_influence)):
+                for j in range(i + 1, len(all_words_influence)):
+                    if all_words_influence[j][1] > all_words_influence[i][1]:
+                        all_words_influence[i], all_words_influence[j] = all_words_influence[j], all_words_influence[i]
+            
+            # Pegar os top N
+            top_words_list = all_words_influence[:top_words_count]
+            
+            # Normalizar apenas o top N para somar 1.0 (100% de representatividade relativa)
+            top_total_influence = sum(inf for w, inf in top_words_list)
+            if top_total_influence > 0:
+                for i in range(len(top_words_list)):
+                    top_words_list[i][1] = top_words_list[i][1] / top_total_influence
+                    
+            # Converter de volta para tupla
+            top_words = [(w, i) for w, i in top_words_list]
+
+        classifications.append((label, best_category, best_raw_score, node_scores, top_words))
 
     return classifications

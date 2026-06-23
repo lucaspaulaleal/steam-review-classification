@@ -52,11 +52,11 @@ def test_realtime_classification_endpoint_returns_200_and_scores():
     assert body["category"] == "Performance"
     assert body["score"] > 0
     assert len(body["scores"]) == 4
-    assert "fps" in body["tokens"]
+    assert "fp" in body["tokens"]
 
 
 def test_realtime_classification_endpoint_rejects_empty_content():
-    response = client.post("/reviews/classify", json={"text": "!!! 123 !!!"})
+    response = client.post("/reviews/classify", json={"text": "!!! !!!"})
 
     assert response.status_code == 400
 

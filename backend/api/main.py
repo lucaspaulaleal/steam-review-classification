@@ -3,6 +3,8 @@
 from pydantic import BaseModel, Field
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+import pandas as pd
+import os
 from backend.classification.realtime import classify_review_text
 from backend.graph.builder import build_tripartite_graph, mock_documents, mock_seed_groups
 from backend.propagation.label_propagation import classify_reviews, label_propagation
@@ -14,6 +16,9 @@ from backend.graph.graph import Graph
 
 class ReviewClassificationRequest(BaseModel):
     text: str = Field(..., min_length=1, max_length=5000)
+    tf_idf_threshold: float = Field(default=0.0, ge=0.0, description="Threshold for TF-IDF edges")
+    pmi_threshold: float = Field(default=0.0, ge=0.0, description="Threshold for PMI edges")
+    damping_factor: float = Field(default=0.85, ge=0.0, le=1.0, description="Damping factor for Label Propagation")
 
 app = FastAPI(
     title="Steam Review Classification API",
@@ -23,10 +28,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -51,17 +53,23 @@ def health_check():
 
 
 @app.get("/reviews/mock-classifications")
-def mock_classifications():
-    graph = build_tripartite_graph(mock_documents(), mock_seed_groups())
-    scores = label_propagation(graph, iterations=30, threshold=0.0001)
+def mock_classifications(
+    tf_idf_threshold: float = Query(0.0, ge=0.0, description="Threshold for TF-IDF edges"),
+    pmi_threshold: float = Query(0.0, ge=0.0, description="Threshold for PMI edges"),
+    damping_factor: float = Query(0.85, ge=0.0, le=1.0, description="Damping factor for Label Propagation"),
+    iterations: int = Query(30, ge=1, le=100, description="Number of iterations")
+):
+    graph = build_tripartite_graph(mock_documents(), mock_seed_groups(), tf_idf_threshold=tf_idf_threshold, pmi_threshold=pmi_threshold)
+    scores = label_propagation(graph, iterations=iterations, threshold=0.0001, damping_factor=damping_factor)
     classifications = classify_reviews(graph, scores)
     response = []
-    for review_label, category, score, category_scores in classifications:
+    for review_label, category, score, category_scores, top_words in classifications:
         response.append(
             {
                 "review": review_label,
                 "category": category,
                 "score": score,
+                "top_words": [{"word": w, "influence": round(inf, 6)} for w, inf in top_words],
                 "scores": [
                     {"category": score_label, "score": score_value}
                     for score_label, score_value in category_scores
@@ -74,9 +82,113 @@ def mock_classifications():
     }
 
 
+@app.get("/reviews/dataset")
+def get_dataset_reviews(limit: int = 5):
+    """Retorna as top reviews do dataset real baseado em votos úteis."""
+    import json
+    cache_path = "datasets/steam_reviews_cache.json"
+    if os.path.exists(cache_path):
+        with open(cache_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+            
+    csv_path = "datasets/steam_reviews_ptbr_top_game.csv"
+    if not os.path.exists(csv_path):
+        return {"items": [], "count": 0, "message": "Dataset não encontrado."}
+    
+    try:
+        df = pd.read_csv(csv_path)
+        # Ordena pelas mais úteis
+        if 'votes_helpful' in df.columns:
+            df = df.sort_values(by='votes_helpful', ascending=False)
+        
+        import re
+        records = []
+        buckets = {
+            "Performance": [],
+            "Gameplay": [],
+            "Gráfico": [],
+            "Narrativa": [],
+            "Outros": []
+        }
+        
+        # Palavras indicativas de português vs ingles
+        pt_words = r'\b(que|não|sim|jogo|muito|bom|ruim|mais|para|com|como|mas|ele|ela|uma|um|jogar|história|graficos|gráfico)\b'
+        eng_words = r'\b(the|and|this|game|is|it|that|for|with|best|worst|ever)\b'
+        
+        from backend.classification.realtime import classify_review_text
+
+        for _, row in df.iterrows():
+            text = str(row['review'])
+            
+            # Filtro rígido de idioma (Pula se não tiver PT-BR ou se tiver muita palavra em INGLÊS)
+            if len(text) < 15:
+                continue
+            if len(re.findall(pt_words, text.lower())) < 1:
+                continue
+            if len(re.findall(eng_words, text.lower())) >= 2:
+                continue
+                
+            cls = classify_review_text(text)
+            category = cls["category"] if cls else "Outros"
+            top_words = cls["top_words"] if cls and "top_words" in cls else []
+            
+            # Normalização de nomenclatura
+            if "grafic" in category.lower() or "gráfic" in category.lower():
+                category = "Gráfico"
+            
+            if category not in buckets:
+                buckets[category] = []
+                
+            buckets[category].append({
+                "review_id": row['review_id'],
+                "review": text,
+                "recommended": row['recommended'],
+                "votes_helpful": row['votes_helpful'],
+                "category": category,
+                "top_words": top_words,
+            })
+            
+            total_collected = sum(len(v) for v in buckets.values())
+            
+            # Cotas mínimas (para garantir mais volume)
+            has_min_quota = (
+                len(buckets.get("Performance", [])) >= 15 and
+                len(buckets.get("Gameplay", [])) >= 15 and
+                len(buckets.get("Gráfico", [])) >= 15 and
+                len(buckets.get("Narrativa", [])) >= 15
+            )
+            
+            # Para de processar se atingiu as cotas E atingiu um bom limite
+            if has_min_quota and total_collected >= 100:
+                break
+                
+            # Segurança para não processar o CSV inteiro se as cotas não forem batidas
+            if total_collected >= 250:
+                break
+                
+        for cat_list in buckets.values():
+            records.extend(cat_list)
+            
+        # Re-ordena as classificadas
+        records = sorted(records, key=lambda x: x["votes_helpful"], reverse=True)
+            
+        result = {"items": records, "count": len(records)}
+        
+        # Salva o cache
+        with open(cache_path, "w", encoding="utf-8") as f:
+            json.dump(result, f, ensure_ascii=False)
+            
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao ler CSV: {str(e)}")
+
+
 @app.get("/graph/mock-data")
-def mock_graph_data():
-    graph = build_tripartite_graph(mock_documents(), mock_seed_groups())
+def mock_graph_data(
+    tf_idf_threshold: float = Query(0.0, ge=0.0, description="Threshold for TF-IDF edges"),
+    pmi_threshold: float = Query(0.0, ge=0.0, description="Threshold for PMI edges")
+):
+    graph = build_tripartite_graph(mock_documents(), mock_seed_groups(), tf_idf_threshold=tf_idf_threshold, pmi_threshold=pmi_threshold)
 
     nodes = []
     for idx in range(graph.size()):
@@ -117,7 +229,12 @@ def mock_graph_data():
 
 @app.post("/reviews/classify")
 def classify_review(request: ReviewClassificationRequest):
-    result = classify_review_text(request.text)
+    result = classify_review_text(
+        request.text, 
+        tf_idf_threshold=request.tf_idf_threshold, 
+        pmi_threshold=request.pmi_threshold, 
+        damping_factor=request.damping_factor
+    )
 
     if result is None:
         raise HTTPException(
@@ -152,7 +269,9 @@ def demo_binary_search(
     - **Passo 4** — `_build_cooccurrence_tables` com busca binária (PMI)
     """
     documents = mock_documents()
-    palavra_buscada = palavra.lower()
+    from backend.preprocessing.nlp import clean_text
+    tokens = clean_text(palavra)
+    palavra_buscada = tokens[0] if tokens else palavra.lower()
 
     # ── PASSO 1 & 3 — df_table (TF-IDF) ──────────────────────────────────
     df_table = _build_df_table(documents)
@@ -239,4 +358,52 @@ def demo_binary_search(
             "reviews_que_contem_a_palavra": reviews_com_palavra,
             "total_reviews": len(tfidf_result),
         },
+    }
+
+@app.get(
+    "/demo/bfs-path",
+    summary="Demonstração — Caminho BFS (Explainability)",
+    tags=["Demo Issue #3"],
+)
+def demo_bfs_path(
+    node_id: str = Query("R1", description="ID da Review (ex: R1, R2) ou token (ex: word:fp)"),
+    tf_idf_threshold: float = Query(0.0, ge=0.0),
+    pmi_threshold: float = Query(0.0, ge=0.0)
+):
+    """
+    Usa Busca em Largura (BFS) para encontrar o caminho mais curto (número de saltos)
+    que conecta o nó inicial a uma Categoria. Mostra a "Rastreabilidade" de como a IA pensa.
+    """
+    graph = build_tripartite_graph(
+        mock_documents(), 
+        mock_seed_groups(), 
+        tf_idf_threshold=tf_idf_threshold, 
+        pmi_threshold=pmi_threshold
+    )
+
+    # Se a pessoa buscou apenas a palavra, adicionamos o prefixo word: para facilitar
+    if not node_id.startswith("R") and not node_id.startswith("word:"):
+        from backend.preprocessing.nlp import clean_text
+        tokens = clean_text(node_id)
+        if tokens:
+            node_id = "word:" + tokens[0]
+
+    path = graph.bfs_shortest_path(node_id, target_type="category")
+
+    if not path:
+        return {"node": node_id, "mensagem": "Nenhum caminho encontrado para nenhuma categoria."}
+
+    # Formatar o texto explicativo
+    steps_text = []
+    for step in path:
+        if "weight_from_prev" in step:
+            steps_text.append(f"--(peso: {step['weight_from_prev']})-->")
+        steps_text.append(f"[{step['type']}] {step['label']}")
+        
+    return {
+        "no_analisado": node_id,
+        "categoria_alcancada": path[-1]["label"] if path else None,
+        "tamanho_do_caminho": len(path) - 1,
+        "caminho_detalhado": path,
+        "caminho_texto": " ".join(steps_text)
     }

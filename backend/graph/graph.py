@@ -120,3 +120,47 @@ class Graph:
 
     def size(self) -> int:
         return len(self.labels)
+
+    def bfs_shortest_path(self, start_label: str, target_type: str = "category") -> list[dict]:
+        """
+        Realiza uma Busca em Largura (BFS) para encontrar o caminho mais curto
+        entre o nó inicial e qualquer nó do tipo especificado (ex: 'category').
+        Retorna a lista de nós que formam o caminho.
+        """
+        start_idx = self._find_node_idx(start_label)
+        if start_idx == -1:
+            return []
+
+        # Fila guarda o índice do nó e o caminho percorrido até ele.
+        queue = [(start_idx, [start_idx])]
+        visited = {start_idx}
+
+        while queue:
+            current_idx, path = queue.pop(0)
+
+            # Se encontrou o tipo desejado
+            if self.node_types[current_idx] == target_type and len(path) > 1:
+                # Reconstrói o caminho com labels e informações legíveis
+                result_path = []
+                for i in range(len(path)):
+                    idx = path[i]
+                    step = {
+                        "label": self.labels[idx],
+                        "type": self.node_types[idx]
+                    }
+                    if i > 0:
+                        prev_idx = path[i-1]
+                        for neighbor_idx, weight in self.adj[prev_idx]:
+                            if neighbor_idx == idx:
+                                step["weight_from_prev"] = round(weight, 6)
+                                break
+                    result_path.append(step)
+                return result_path
+
+            # Continua a busca nos vizinhos
+            for neighbor_idx, weight in self.adj[current_idx]:
+                if neighbor_idx not in visited:
+                    visited.add(neighbor_idx)
+                    queue.append((neighbor_idx, path + [neighbor_idx]))
+
+        return []
