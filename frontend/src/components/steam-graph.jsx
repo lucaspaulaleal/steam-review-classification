@@ -200,7 +200,7 @@ export default memo(function SteamGraph() {
   }, [filter]);
 
   return (
-    <div style={{ background: "transparent", minHeight: "450px", minWidth: "720px", height: "100%", padding: "16px 12px", fontFamily: "monospace", color: "#e2e8f0", display: "flex", flexDirection: "column" }}>
+    <div style={{ background: "transparent", width: "100%", height: "100%", padding: "16px 12px", fontFamily: "monospace", color: "#e2e8f0", display: "flex", flexDirection: "column" }}>
 
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: "14px" }}>

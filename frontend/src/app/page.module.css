@@ -589,11 +589,18 @@ a.secondary {
 
 @media (max-width: 1024px) {
   .gridContainer {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2rem;
   }
   
   .rightColumn {
     position: static;
+    width: 100%;
+  }
+  
+  .leftColumn {
+    width: 100%;
   }
 }
 
@@ -723,6 +730,7 @@ a.secondary {
     align-items: flex-start;
     gap: .75rem;
     padding: .75rem;
+    flex-wrap: wrap;
   }
 
   .ReviewIconContainer {

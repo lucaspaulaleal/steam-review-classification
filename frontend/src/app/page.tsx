@@ -117,38 +117,37 @@ export default function Home() {
       </header>
 
       <main className={styles.main}>
-        <div className={styles.gridContainer}>
+        <div className={styles.TituloJogo} style={{ width: '100%' }}>
+          <p>Análise de usuários para</p>
+          <h1 className={styles.NomeJogo}>Grand Theft Auto V</h1>
+        </div>
+
+        <div className={styles.analiseGeral}>
+          <div className={styles.containerGeral} style={{ flex: 1 }}>
+                <p>ANÁLISES DA COMUNIDADE (Kaggle)</p>
+                <h2 className={styles.positiveAnalises}>Ligeiramente Positivas</h2>
+                <p>
+                    {datasetReviews.length > 0 
+                    ? `${datasetReviews.length.toLocaleString("pt-BR")} análises processadas` 
+                    : "Carregando análises..."}
+               </p>
+          </div>
+          <div className={styles.containerGeralMenor} style={{ flex: 1 }}>
+            <div className={styles.containerGeral} style={{ height: '100%' }}>
+              <p>Análises Totais (Steam): <span>+ 1.6 Milhões</span></p>
+              <p className={styles.positiveAnalises}>Muito Positivas</p>
+            </div>
+            <div className={styles.containerGeral} style={{ height: '100%' }}>
+              <p>Lançamento (PC): <span>14 de Abril de 2015</span></p>
+              <p className={styles.positiveAnalises}>Rockstar Games</p>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.gridContainer} style={{ marginTop: '1rem' }}>
           
           {/* COLUNA ESQUERDA: Conteúdo Principal */}
           <div className={styles.leftColumn}>
-            
-            <div className={styles.TituloJogo}>
-              <p>Análise de usuários para</p>
-              <h1 className={styles.NomeJogo}>Grand Theft Auto V</h1>
-            </div>
-
-            <div className={styles.analiseGeral}>
-              <div className={styles.containerGeral}>
-                    <p>ANÁLISES DA COMUNIDADE (Kaggle)</p>
-                    <h2 className={styles.positiveAnalises}>Ligeiramente Positivas</h2>
-                    <p>
-                        {datasetReviews.length > 0 
-                        ? `${datasetReviews.length.toLocaleString("pt-BR")} análises processadas` 
-                        : "Carregando análises..."}
-                        {/* 2.800 análises processadas */}
-                   </p>
-              </div>
-              <div className={styles.containerGeralMenor}>
-                <div className={styles.containerGeral}>
-                  <p>Análises Totais (Steam): <span>+ 1.6 Milhões</span></p>
-                  <p className={styles.positiveAnalises}>Muito Positivas</p>
-                </div>
-                <div className={styles.containerGeral}>
-                  <p>Lançamento (PC): <span>14 de Abril de 2015</span></p>
-                  <p className={styles.positiveAnalises}>Rockstar Games</p>
-                </div>
-              </div>
-            </div>
 
             <div className={styles.ContainerFiltro}>
               <p>FILTROS DE ANÁLISE</p>
