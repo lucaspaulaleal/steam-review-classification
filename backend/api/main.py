@@ -359,3 +359,51 @@ def demo_binary_search(
             "total_reviews": len(tfidf_result),
         },
     }
+
+@app.get(
+    "/demo/bfs-path",
+    summary="Demonstração — Caminho BFS (Explainability)",
+    tags=["Demo Issue #3"],
+)
+def demo_bfs_path(
+    node_id: str = Query("R1", description="ID da Review (ex: R1, R2) ou token (ex: word:fp)"),
+    tf_idf_threshold: float = Query(0.0, ge=0.0),
+    pmi_threshold: float = Query(0.0, ge=0.0)
+):
+    """
+    Usa Busca em Largura (BFS) para encontrar o caminho mais curto (número de saltos)
+    que conecta o nó inicial a uma Categoria. Mostra a "Rastreabilidade" de como a IA pensa.
+    """
+    graph = build_tripartite_graph(
+        mock_documents(), 
+        mock_seed_groups(), 
+        tf_idf_threshold=tf_idf_threshold, 
+        pmi_threshold=pmi_threshold
+    )
+
+    # Se a pessoa buscou apenas a palavra, adicionamos o prefixo word: para facilitar
+    if not node_id.startswith("R") and not node_id.startswith("word:"):
+        from backend.preprocessing.nlp import clean_text
+        tokens = clean_text(node_id)
+        if tokens:
+            node_id = "word:" + tokens[0]
+
+    path = graph.bfs_shortest_path(node_id, target_type="category")
+
+    if not path:
+        return {"node": node_id, "mensagem": "Nenhum caminho encontrado para nenhuma categoria."}
+
+    # Formatar o texto explicativo
+    steps_text = []
+    for step in path:
+        if "weight_from_prev" in step:
+            steps_text.append(f"--(peso: {step['weight_from_prev']})-->")
+        steps_text.append(f"[{step['type']}] {step['label']}")
+        
+    return {
+        "no_analisado": node_id,
+        "categoria_alcancada": path[-1]["label"] if path else None,
+        "tamanho_do_caminho": len(path) - 1,
+        "caminho_detalhado": path,
+        "caminho_texto": " ".join(steps_text)
+    }
